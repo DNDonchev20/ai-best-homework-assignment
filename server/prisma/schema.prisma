@@ -28,6 +28,7 @@ model Users {
   password  String
 
   role      Role     @default(USER)
+  refreshToken String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -75,9 +76,9 @@ model Teachers {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      Users    @relation(fields: [userId], references: [id])
-  subject   Subjects @relation(fields: [subjectId], references: [id])
-  group     Groups   @relation(fields: [groupId], references: [id])
+  users      Users?    @relation(fields: [userId], references: [id])
+  subjects   Subjects? @relation(fields: [subjectId], references: [id])
+  groups     Groups?   @relation(fields: [groupId], references: [id])
 
   Homeworks Homeworks[]
 }
@@ -92,8 +93,8 @@ model StudentDetails {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      Users    @relation(fields: [userId], references: [id])
-  group     Groups   @relation(fields: [groupId], references: [id])
+  users      Users?    @relation(fields: [userId], references: [id])
+  groups     Groups?   @relation(fields: [groupId], references: [id])
 
   HomeworkSubmissions HomeworkSubmissions[]
   Grades Grades[]
@@ -115,9 +116,9 @@ model Homeworks {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  group     Groups   @relation(fields: [groupId], references: [id])
-  subject   Subjects @relation(fields: [subjectId], references: [id])
-  teacher   Teachers @relation(fields: [teacherId], references: [id])
+  group     Groups?   @relation(fields: [groupId], references: [id])
+  subject   Subjects? @relation(fields: [subjectId], references: [id])
+  teacher   Teachers? @relation(fields: [teacherId], references: [id])
 
   HomeworkSubmissions HomeworkSubmissions[]
 }
@@ -128,18 +129,18 @@ model HomeworkSubmissions {
   homeworkId String
   studentId  String
 
-  points    Int
+  grade    Int
   submissionDate DateTime @default(now())
 
   filePath  String
 
-  comments  String 
+  feedback  String? 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  homework  Homeworks @relation(fields: [homeworkId], references: [id])
-  student   StudentDetails @relation(fields: [studentId], references: [id])
+  homework  Homeworks? @relation(fields: [homeworkId], references: [id])
+  student   StudentDetails? @relation(fields: [studentId], references: [id])
 
   Grades Grades[]
 }
@@ -148,7 +149,7 @@ model Grades {
   id        String   @id @default(cuid())
 
   studentId String
-  homeworkSubmissionId String
+  homeworkSubmissionId String @unique
 
   grade     Int
   percentage Int
@@ -157,6 +158,6 @@ model Grades {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  student   StudentDetails @relation(fields: [studentId], references: [id])
-  homeworkSubmission HomeworkSubmissions @relation(fields: [homeworkSubmissionId], references: [id])
+  students   StudentDetails? @relation(fields: [studentId], references: [id])
+  homeworkSubmissions HomeworkSubmissions? @relation(fields: [homeworkSubmissionId], references: [id])
 }

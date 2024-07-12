@@ -1,0 +1,21 @@
+import { ApiProperty } from "@nestjs/swagger";
+
+export class CreateHomeworkSubmissionDto {
+    @ApiProperty({example: '1', description: 'ID of the User'})
+    homeworkId: string;
+
+    @ApiProperty({example: '1', description: 'ID of the User'})
+    studentId: string;
+
+    @ApiProperty({example: '1', description: 'ID of the Homework'})
+    grade: number;
+
+    @ApiProperty({example: 'This is the first homework submission', description: 'Description of the Homework Submission'})
+    filePath: string;
+
+    @ApiProperty({example: '2021-12-31T23:59:59.999Z', description: 'Submission date of the Homework'})
+    feedback?: string;
+
+    homework?: any;
+    student?: any;
+}
