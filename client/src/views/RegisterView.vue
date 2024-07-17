@@ -18,9 +18,33 @@ const switchVisibility = async () => {
 </script>
 
 <template>
-  <div class="mx-auto mt-20 min-h-[700px] max-w-[600px] pt-20 shadow">
-    <h1 class="text-center text-6xl font-semibold text-accent">Log in</h1>
+  <div
+    class="mx-auto mb-20 mt-20 min-h-[700px] max-w-[600px] pb-10 pt-20 shadow"
+  >
+    <h1 class="text-center text-6xl font-semibold text-accent">Register</h1>
     <form action="#" class="mx-auto max-w-[700px]">
+      <div class="mx-auto mt-10 max-w-[370px]">
+        <label for="email" class="block text-2xl">First name</label>
+        <input
+          id="firstName"
+          name="firstName"
+          type="text"
+          placeholder="First name"
+          required
+          class="font- mt-4 block h-[48px] w-full border-2 border-solid pl-4 shadow-md outline-none"
+        />
+      </div>
+      <div class="mx-auto mt-10 max-w-[370px]">
+        <label for="email" class="block text-2xl">Second name</label>
+        <input
+          id="secondName"
+          name="secondName"
+          type="text"
+          placeholder="Second name"
+          required
+          class="font- mt-4 block h-[48px] w-full border-2 border-solid pl-4 shadow-md outline-none"
+        />
+      </div>
       <div class="mx-auto mt-10 max-w-[370px]">
         <label for="email" class="block text-2xl">Email address</label>
         <input
@@ -64,11 +88,11 @@ const switchVisibility = async () => {
       </button>
     </form>
     <p class="mt-14 text-center text-lg text-gray-500">
-      If you don't have account,
-      <RouterLink to="/register"
+      You have an account,
+      <RouterLink to="/login"
         ><span
           class="cursor-pointer underline decoration-accent decoration-solid decoration-2"
-          >create one now!</span
+          >use it now!</span
         ></RouterLink
       >
     </p>
