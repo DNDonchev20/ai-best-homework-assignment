@@ -10,9 +10,12 @@ import { GroupsModule } from './logistical/groups/groups.module';
 import { GradeModule } from './logistical/grade/grade.module';
 import { TeacherModule } from './logistical/teacher/teacher.module';
 import { StudentDetailsModule } from './logistical/student-details/student-details.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [PrismaModule, UserModule, HomeworkModule, AuthModule, TeacherModule, HomeworkSubmissionModule, SubjectsModule, GroupsModule, GradeModule, HomeworkModule, StudentDetailsModule],
+  imports: [PrismaModule, UserModule, HomeworkModule, AuthModule, TeacherModule, HomeworkSubmissionModule, SubjectsModule, GroupsModule, GradeModule, HomeworkModule, StudentDetailsModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+  ],
   providers: [AppService],
 })
 export class AppModule {}

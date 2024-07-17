@@ -2,11 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { CreateHomeworkSubmissionDto } from './dto/create-homework-submission.dto';
 import { UpdateHomeworkSubmissionDto } from './dto/update-homework-submission.dto';
 import { PrismaService } from 'src/prisma.service';
-
 import { HomeworkSubmissions, Prisma } from '@prisma/client';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { awsAccessKey, awsSecretAccessKey, awsS3Region } from 'src/constants';
 
 @Injectable()
 export class HomeworkSubmissionService {
+  private readonly s3Client = new S3Client({ 
+    credentials: { 
+      accessKeyId: awsAccessKey,
+      secretAccessKey: awsSecretAccessKey
+    },
+    region: awsS3Region
+  });
+
   constructor(private readonly prisma: PrismaService) {}
 
   async findlAllHomeworkSubmissions(): Promise<HomeworkSubmissions[]> {
@@ -31,7 +40,25 @@ export class HomeworkSubmissionService {
     });
   }
 
-  async createHomeworkSubmission(data: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
+  async createHomeworkSubmission(createHomeworkSubmissionDto: CreateHomeworkSubmissionDto, file: Express.Multer.File): Promise<HomeworkSubmissions> {
+    // Upload file to S3
+    const bucketName = 'homework-uploader';
+    const fileUrl = `https://${bucketName}.s3.${awsS3Region}.amazonaws.com/${file.originalname}`;
+
+    await this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: file.originalname,
+        Body: file.buffer,
+      })
+    );
+
+    // Create homework submission in the database
+    const data: Prisma.HomeworkSubmissionsCreateInput = {
+      ...createHomeworkSubmissionDto,
+      filePath: fileUrl,
+    };
+
     return this.prisma.homeworkSubmissions.create({
       data,
     });

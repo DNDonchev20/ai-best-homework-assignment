@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CreateHomeworkDto } from './dto/create-homework.dto';
-import { UpdateHomeworkDto } from './dto/update-homework.dto';
 
 import { Homeworks, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class HomeworkService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, readonly configService: ConfigService) {}
 
   async findAll(): Promise<Homeworks[]> {
     return this.prisma.homeworks.findMany();

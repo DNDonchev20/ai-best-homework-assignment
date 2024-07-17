@@ -4,7 +4,7 @@ import { HomeworkController } from './homework.controller';
 
 @Module({
   controllers: [HomeworkController],
-  providers: [HomeworkService],
+  providers: [HomeworkService, ],
   exports: [HomeworkService],
 })
 export class HomeworkModule {}

@@ -130,7 +130,6 @@ model HomeworkSubmissions {
   homeworkId String
   studentId  String
 
-  grade    Int
   submissionDate DateTime @default(now())
 
   filePath  String
