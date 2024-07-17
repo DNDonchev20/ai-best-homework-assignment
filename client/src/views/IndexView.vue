@@ -25,11 +25,13 @@ import { ref } from "vue";
         dicta adipisci.
       </p>
       <div class="mt-10 flex">
-        <a
-          href="#"
-          class="text-md rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
-          >Start now
-        </a>
+        <RouterLink to="/login">
+          <a
+            href="#"
+            class="text-md rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
+            >Start now
+          </a>
+        </RouterLink>
       </div>
     </div>
     <img
