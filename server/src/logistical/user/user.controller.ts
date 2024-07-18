@@ -48,6 +48,7 @@ export class UserController {
   @ApiResponse({status: 404, description: 'Not found.'})
 
   async createUser(@Body() createUserDto: CreateUserDto): Promise<Users> {
+    console.log(createUserDto);
     return this.userService.createUser(createUserDto);
   }
 

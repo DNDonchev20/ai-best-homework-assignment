@@ -25,11 +25,12 @@ async function bootstrap() {
   app.enableCors();
   app.use(helmet());
 
-  await app.listen(port, '0.0.0.0');
-
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }  
+
+  await app.listen(port, '0.0.0.0');
 }
+
 bootstrap();

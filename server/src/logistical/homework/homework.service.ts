@@ -2,12 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 import { Homeworks, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-import { ConfigService } from '@nestjs/config';
-
 
 @Injectable()
 export class HomeworkService {
-  constructor(private prisma: PrismaService, readonly configService: ConfigService) {}
+  constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<Homeworks[]> {
     return this.prisma.homeworks.findMany();

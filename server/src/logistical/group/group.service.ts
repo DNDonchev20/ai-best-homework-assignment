@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma.service';
 import { Groups, Prisma } from '@prisma/client';
 
 @Injectable()
-export class GroupsService {
+export class GroupService {
   constructor(private prisma: PrismaService) {}
 
   async findAllGroups(): Promise<Groups[]> {

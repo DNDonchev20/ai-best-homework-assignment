@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SubjectsService } from './subjects.service';
+import { SubjectService } from './subject.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('subjects')
-@Controller('subjects')
-export class SubjectsController {
-  constructor(private readonly subjectsService: SubjectsService) {}
+@ApiTags('subject')
+@Controller('subject')
+export class SubjectController {
+  constructor(private readonly subjectsService: SubjectService) {}
 
   @Get()
   @ApiOperation({summary: 'Get all subjects'})

@@ -1,3 +1,4 @@
+
 import { Injectable } from '@nestjs/common';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
@@ -6,7 +7,7 @@ import { Subjects, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
-export class SubjectsService {
+export class SubjectService {
   constructor(private prisma: PrismaService) {}
 
   async findAllSubjects(): Promise<Subjects[]> {
