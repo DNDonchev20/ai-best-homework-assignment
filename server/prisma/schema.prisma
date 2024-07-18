@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  TEACHER
+  ADMIN
+}
+
+model Users {
+  id        String   @id @default(cuid())
+
+  email     String   @unique
+  firstName String
+  lastName  String
+  password  String
+
+  role      Role     @default(USER)
+  refreshToken String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Teachers Teachers[]
+  StudentDetails StudentDetails[]
+}
+
+model Subjects {
+  id        String   @id @default(cuid())
+
+  name      String   @unique
+  code      String?   @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Teachers Teachers[]
+  Homeworks Homeworks[]
+}
+
+model Groups {
+  id        String   @id @default(cuid())
+
+  name      String   @unique
+  code      String?   @unique
+
+  year      Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Teachers Teachers[]
+  StudentDetails StudentDetails[]
+  Homeworks Homeworks[]
+}
+
+model Teachers {
+  id        String   @id @default(cuid())
+
+  userId    String   @unique
+  subjectId String
+  groupId   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users      Users?    @relation(fields: [userId], references: [id])
+  subjects   Subjects? @relation(fields: [subjectId], references: [id])
+  groups     Groups?   @relation(fields: [groupId], references: [id])
+
+  Homeworks Homeworks[]
+}
+
+model StudentDetails {
+  id        String   @id @default(cuid())
+
+  userId    String   @unique
+  groupId   String
+  classNumber Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users      Users?    @relation(fields: [userId], references: [id])
+  groups     Groups?   @relation(fields: [groupId], references: [id])
+
+  HomeworkSubmissions HomeworkSubmissions[]
+  Grades Grades[]
+}
+
+model Homeworks {
+  id        String   @id @default(cuid())
+
+  subjectId String
+  teacherId String
+  groupId   String
+
+  title     String
+  description String
+  dueDate   DateTime
+
+  maxPoints Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  group     Groups?   @relation(fields: [groupId], references: [id])
+  subject   Subjects? @relation(fields: [subjectId], references: [id])
+  teacher   Teachers? @relation(fields: [teacherId], references: [id])
+
+  HomeworkSubmissions HomeworkSubmissions[]
+}
+
+model HomeworkSubmissions {
+  id        String   @id @default(cuid())
+
+  homeworkId String
+  studentId  String
+
+  submissionDate DateTime @default(now())
+
+  filePath  String
+
+  feedback  String? 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  homework  Homeworks? @relation(fields: [homeworkId], references: [id])
+  student   StudentDetails? @relation(fields: [studentId], references: [id])
+
+  Grades Grades[]
+}
+
+model Grades {
+  id        String   @id @default(cuid())
+
+  studentId String
+  homeworkSubmissionId String @unique
+
+  grade     Int
+  percentage Int
+  feedback  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  students   StudentDetails? @relation(fields: [studentId], references: [id])
+  homeworkSubmissions HomeworkSubmissions? @relation(fields: [homeworkSubmissionId], references: [id])
+}
