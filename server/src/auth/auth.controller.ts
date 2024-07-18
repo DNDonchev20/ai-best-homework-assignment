@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus, Request, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/is_public.decorator';
 import { AuthGuard } from '@nestjs/passport';
@@ -31,9 +31,12 @@ export class AuthController {
       },
     },
   })
-
-  async login(@Body() user: any) {
-    return this.authService.login(user);
+  async login(@Body() user: { email: string, password: string }) {
+    const { email, password } = user;
+    if (!email || !password) {
+      throw new UnauthorizedException('Email and password are required');
+    }
+    return this.authService.login(email, password);
   }
 
   @Public()

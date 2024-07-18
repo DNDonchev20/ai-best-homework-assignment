@@ -61,9 +61,9 @@ export class UserService {
 
   //refresh token methods
 
-  async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
+  async updateRefreshToken(id: string, refreshToken: string): Promise<void> {
     await this.prisma.users.update({
-      where: { id: userId },
+      where: { id },
       data: { refreshToken },
     });
   }

@@ -1,16 +1,29 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { UserService } from "../services/userServices";
 
-const switchVisibility = async () => {
-  const passwordField = document.getElementById(
-    "password",
-  ) as HTMLInputElement | null;
+const userService = new UserService();
+const router = useRouter();
+
+const email = ref<string>("");
+const password = ref<string>("");
+
+async function login(event: Event) {
+  event.preventDefault();
+  try {
+    await userService.login(email.value, password.value);
+    router.push("/"); 
+  } catch (error) {
+    console.error("Login error:", error);
+  }
+}
+
+const switchVisibility = () => {
+  const passwordField = document.getElementById("password") as HTMLInputElement | null;
   if (passwordField) {
-    if (passwordField.getAttribute("type") === "password") {
-      passwordField.setAttribute("type", "text");
-    } else {
-      passwordField.setAttribute("type", "password");
-    }
+    const fieldType = passwordField.getAttribute("type");
+    passwordField.setAttribute("type", fieldType === "password" ? "text" : "password");
   } else {
     console.error("Password field not found.");
   }
@@ -20,10 +33,11 @@ const switchVisibility = async () => {
 <template>
   <div class="mx-auto mt-20 min-h-[700px] max-w-[600px] pt-20 shadow">
     <h1 class="text-center text-6xl font-semibold text-accent">Log in</h1>
-    <form action="#" class="mx-auto max-w-[700px]">
+    <form @submit="login" class="mx-auto max-w-[700px]">
       <div class="mx-auto mt-10 max-w-[370px]">
         <label for="email" class="block text-2xl">Email address</label>
         <input
+          v-model="email"
           id="email"
           name="email"
           type="email"
@@ -37,6 +51,7 @@ const switchVisibility = async () => {
         <label for="password" class="block text-2xl">Password</label>
         <div class="relative">
           <input
+            v-model="password"
             id="password"
             name="password"
             type="password"
@@ -45,7 +60,7 @@ const switchVisibility = async () => {
             class="font- mt-4 block h-[48px] w-full border-2 border-solid pl-4 shadow-md outline-none"
           />
           <div
-            @click="switchVisibility()"
+            @click="switchVisibility"
             class="absolute right-[20px] top-[10px] z-50 cursor-pointer"
           >
             <img
@@ -64,7 +79,7 @@ const switchVisibility = async () => {
       </button>
     </form>
     <p class="mt-14 text-center text-lg text-gray-500">
-      If you don't have account,
+      If you don't have an account,
       <RouterLink to="/register"
         ><span
           class="cursor-pointer underline decoration-accent decoration-solid decoration-2"

@@ -1,13 +1,8 @@
-import { Injectable } from '@nestjs/common';
-
-import { UserService } from 'src/logistical/user/user.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-
-import { jwtSecret } from 'src/constants';
-
+import { UserService } from 'src/logistical/user/user.service';
 import * as bcrypt from 'bcrypt';
-
-import { UnauthorizedException } from '@nestjs/common';
+import { jwtSecret } from 'src/constants';
 
 @Injectable()
 export class AuthService {
@@ -25,16 +20,15 @@ export class AuthService {
     return null;
   }
 
-  async validateUserById(userId: string): Promise<any> {
-    const user = await this.usersService.findUserById(userId);
-    if (user) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+  async validateUserById(id: string): Promise<any> {
+    return this.usersService.findUserById(id);
   }
 
-  async login(user: any) {
+  async login(email: string, password: string) {
+    const user = await this.validateUser(email, password);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
     const payload = { email: user.email, sub: user.id, role: user.role };
     const access_token = this.jwtService.sign(payload, { expiresIn: '7d' });
     const refresh_token = this.generateRefreshToken(user.id);
@@ -45,7 +39,7 @@ export class AuthService {
   async refreshTokens(refreshToken: string) {
     try {
       const decoded = this.jwtService.verify(refreshToken, { secret: jwtSecret });
-      const user = await this.usersService.findUserById(decoded.sub);
+      const user = await this.validateUserById(decoded.sub);
 
       if (!user || user.refreshToken !== refreshToken) {
         throw new UnauthorizedException('Invalid refresh token');
@@ -63,9 +57,5 @@ export class AuthService {
 
   generateRefreshToken(userId: string) {
     return this.jwtService.sign({ sub: userId }, { secret: jwtSecret, expiresIn: '30d' });
-  }
-
-  async validatePayload(payload: any) {
-    return await this.usersService.findUserByEmail(payload.email);
   }
 }
