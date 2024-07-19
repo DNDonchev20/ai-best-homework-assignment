@@ -20,7 +20,7 @@ export class UserService {
   }
 
   public async login(email: string, password: string) {
-    const response = await apiClient.post<{access_token: string, refresh_token: string}>("/auth/login", {
+    const response = await apiClient.post<{ access_token: string, refresh_token: string }>("/auth/login", {
       email,
       password,
     });
@@ -32,7 +32,24 @@ export class UserService {
     sessionStorage.setItem('access_token_expiry', accessTokenExpiry.toString());
     sessionStorage.setItem('refresh_token_expiry', refreshTokenExpiry.toString());
 
+    const userId = await this.getUserIdByEmail(email);
+    this.updateRefreshToken(userId, response.data.refresh_token);
+    sessionStorage.setItem('user_id', userId);
+
     sessionStorage.setItem('isLogged', 'true');
+
+    return response.data;
+  }
+
+  public async getUserIdByEmail(email: string): Promise<string> {
+    const response = await apiClient.get<{ id: string }>(`/user/id/email/${email}`);
+    return response.data.id;
+  }
+
+  public async updateRefreshToken(userId: string, refreshToken: string) {
+    const response = await apiClient.patch(`/user/refresh/id/${userId}`, {
+      refreshToken,
+    });
 
     return response.data;
   }

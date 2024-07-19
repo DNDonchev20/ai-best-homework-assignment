@@ -71,4 +71,14 @@ export class UserController {
   async deleteUser(@Param('id') id: string): Promise<Users> {
     return this.userService.removeUser(id);
   }
+
+  @Patch('refresh/id/:id')
+  @ApiOperation({summary: 'Update refresh token by id'})
+  @ApiResponse({status: 200, description: 'Update refresh token by id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 404, description: 'Not found.'})
+
+  async updateRefreshToken(@Param('id') id: string, @Body('refreshToken') refreshToken: string): Promise<void> {
+    return this.userService.updateRefreshToken(id, refreshToken);
+  }
 }
