@@ -21,7 +21,7 @@ async function signup() {
       lastName.value,
       email.value,
       password.value,
-      role.value
+      role.value,
     );
     console.log("Signup successful, redirecting...");
     router.push("/login");
@@ -31,7 +31,9 @@ async function signup() {
 }
 
 const switchVisibility = async () => {
-  const passwordField = document.getElementById("password") as HTMLInputElement | null;
+  const passwordField = document.getElementById(
+    "password",
+  ) as HTMLInputElement | null;
   if (passwordField) {
     if (passwordField.getAttribute("type") === "password") {
       passwordField.setAttribute("type", "text");
@@ -45,7 +47,9 @@ const switchVisibility = async () => {
 </script>
 
 <template>
-  <div class="mx-auto mb-20 mt-20 min-h-[700px] max-w-[600px] pb-10 pt-20 shadow">
+  <div
+    class="mx-auto mb-20 mt-20 min-h-[700px] max-w-[600px] pb-10 pt-20 shadow"
+  >
     <h1 class="text-center text-6xl font-semibold text-accent">Register</h1>
     <form @submit.prevent="signup" class="mx-auto max-w-[700px]">
       <div class="mx-auto mt-10 max-w-[370px]">
@@ -97,8 +101,15 @@ const switchVisibility = async () => {
             class="mt-4 block h-[48px] w-full border-2 border-solid pl-4 shadow-md outline-none"
             v-model="password"
           />
-          <div @click="switchVisibility" class="absolute right-[20px] top-[10px] z-50 cursor-pointer">
-            <img class="h-[25px] w-[25px]" src="../assets/images/eye.png" alt="" />
+          <div
+            @click="switchVisibility"
+            class="absolute right-[20px] top-[10px] z-50 cursor-pointer"
+          >
+            <img
+              class="h-[25px] w-[25px]"
+              src="../assets/images/eye.png"
+              alt=""
+            />
           </div>
         </div>
       </div>
@@ -112,7 +123,7 @@ const switchVisibility = async () => {
           v-model="role"
         >
           <option value="" disabled selected hidden>Please choose</option>
-          <option value="USER" selected>User</option>
+          <option value="USER" selected>Student</option>
           <option value="TEACHER">Teacher</option>
         </select>
       </div>
@@ -126,7 +137,9 @@ const switchVisibility = async () => {
     <p class="mt-14 text-center text-lg text-gray-500">
       You have an account,
       <RouterLink to="/login">
-        <span class="cursor-pointer underline decoration-accent decoration-solid decoration-2">
+        <span
+          class="cursor-pointer underline decoration-accent decoration-solid decoration-2"
+        >
           use it now!
         </span>
       </RouterLink>

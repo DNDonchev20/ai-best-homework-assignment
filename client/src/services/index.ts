@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "http://localhost:3000/";
+const apiUrl = "https://homework-server.azurewebsites.net/";
 
 export const apiClient = axios.create({
   baseURL: apiUrl,
@@ -50,8 +50,14 @@ axios.interceptors.response.use(
               refreshToken,
             });
             if (response.data.access_token && response.data.refresh_token) {
-              sessionStorage.setItem("access_token", response.data.access_token);
-              sessionStorage.setItem("refresh_token", response.data.refresh_token);
+              sessionStorage.setItem(
+                "access_token",
+                response.data.access_token,
+              );
+              sessionStorage.setItem(
+                "refresh_token",
+                response.data.refresh_token,
+              );
               axios.defaults.headers.common["Authorization"] =
                 `Bearer ${response.data.access_token}`;
               originalRequest.headers["Authorization"] =

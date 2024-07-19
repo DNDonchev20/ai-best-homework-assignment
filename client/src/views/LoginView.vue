@@ -13,17 +13,30 @@ async function login(event: Event) {
   event.preventDefault();
   try {
     await userService.login(email.value, password.value);
-    router.push("/"); 
+    const userResponse = await userService.getUserById();
+
+    if (userResponse.role == "USER") {
+      router.push("/studentHome");
+    } else if (userResponse.role == "TEACHER") {
+      router.push("/teacherHome");
+    } else {
+      throw new Error("Role not defined");
+    }
   } catch (error) {
     console.error("Login error:", error);
   }
 }
 
 const switchVisibility = () => {
-  const passwordField = document.getElementById("password") as HTMLInputElement | null;
+  const passwordField = document.getElementById(
+    "password",
+  ) as HTMLInputElement | null;
   if (passwordField) {
     const fieldType = passwordField.getAttribute("type");
-    passwordField.setAttribute("type", fieldType === "password" ? "text" : "password");
+    passwordField.setAttribute(
+      "type",
+      fieldType === "password" ? "text" : "password",
+    );
   } else {
     console.error("Password field not found.");
   }
