@@ -19,9 +19,20 @@ export class TeacherService {
     });
   }
 
-  async findTeachersByGroupId(groupId: string): Promise<Teachers[]> {
-    return this.prisma.teachers.findMany({
-      where: { groupId },
+  async findGroupIdsById(userId: string): Promise<string[]> {
+    const teachers = await this.prisma.teachers.findUnique({
+      where: { userId },
+      select: {
+        groupIds: true,
+      },
+    });
+    
+    return teachers.groupIds;
+  }
+
+  async findTeacherByUserId(userId: string): Promise<Teachers> {
+    return this.prisma.teachers.findUnique({
+      where: { userId },
     });
   }
 

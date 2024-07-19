@@ -9,9 +9,8 @@ export class CreateTeacherDto {
     subjectId: string;    
 
     @ApiProperty({example: 'GRP1', description: 'Group ID'})
-    groupId: string;
+    groupIds: string[];
 
     users?: any;
     subjects?: any;
-    groups?: any;
 }

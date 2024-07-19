@@ -1,8 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { TeacherService } from './teacher.service';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/guards/jwt.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Role } from 'src/enums/role.enum';
 
 @ApiTags('teacher')
 @Controller('teacher')
@@ -29,14 +33,14 @@ export class TeacherController {
     return this.teacherService.findOneTeacherById(id);
   }
 
-  @Get('group/:groupId')
-  @ApiOperation({summary: 'Get teachers by group id'})
-  @ApiResponse({status: 200, description: 'Return teachers by group id.'})
+  @Get('userId/:userId')
+  @ApiOperation({summary: 'Get teacher by user id'})
+  @ApiResponse({status: 200, description: 'Return teacher by user id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
-  async findTeachersByGroupId(@Param('groupId') groupId: string) {
-    return this.teacherService.findTeachersByGroupId(groupId);
+  async findTeacherByUserId(@Param('userId') userId: string) {
+    return this.teacherService.findTeacherByUserId(userId);
   }
 
   @Get('subject/:subjectId')
@@ -47,6 +51,16 @@ export class TeacherController {
 
   async findTeachersBySubjectId(@Param('subjectId') subjectId: string) {
     return this.teacherService.findTeachersBySubjectId(subjectId);
+  }
+
+  @Get('groupId/userId/:userId')
+  @ApiOperation({summary: 'Get teacher by group id and user id'})
+  @ApiResponse({status: 200, description: 'Return teacher by group id and user id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 404, description: 'Not found.'})
+
+  async findTeacherByGroupIdAndUserId(@Param('userId') userId: string) {
+    return this.teacherService.findGroupIdsById(userId);
   }
 
   @Post()
@@ -73,7 +87,7 @@ export class TeacherController {
   @ApiResponse({status: 200, description: 'Delete teacher by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
-
+  
   async deleteTeacher(@Param('id') id: string) {
     return this.teacherService.removeTeacher(id);
   }

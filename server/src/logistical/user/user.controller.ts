@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Users } from '@prisma/client';
+import { JwtAuthGuard } from 'src/guards/jwt.guard';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
+import { Public } from 'src/decorators/is_public.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -31,6 +36,7 @@ export class UserController {
     return this.userService.findUserById(id);
   }
 
+  @Public()
   @Get('id/email/:email')
   @ApiOperation({summary: 'Get user id by email'})
   @ApiResponse({status: 200, description: 'Return user id by email.'})
@@ -41,6 +47,7 @@ export class UserController {
     return this.userService.findIdByEmail(email);
   }
 
+  @Public()
   @Post()
   @ApiOperation({summary: 'Create user'})
   @ApiResponse({status: 200, description: 'Create user.'})
@@ -72,6 +79,7 @@ export class UserController {
     return this.userService.removeUser(id);
   }
 
+  @Public()
   @Patch('refresh/id/:id')
   @ApiOperation({summary: 'Update refresh token by id'})
   @ApiResponse({status: 200, description: 'Update refresh token by id.'})

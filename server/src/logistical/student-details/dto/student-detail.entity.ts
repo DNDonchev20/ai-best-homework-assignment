@@ -1,6 +1,6 @@
 export class StudentDetail {
     id: string;
     userId: string;
-    groupId: string;
+    groupIds: string[];
     classNumber: string;
 }

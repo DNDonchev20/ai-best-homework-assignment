@@ -25,6 +25,17 @@ export class StudentDetailsService {
     });
   }
 
+  async findGroupIdsById(userId: string): Promise<string[]> {
+    const studentDetails = await this.prisma.studentDetails.findUnique({
+      where: { userId },
+      select: {
+        groupIds: true,
+      },
+    });
+    
+    return studentDetails.groupIds;
+  }
+
   async createStudentDetail(data: Prisma.StudentDetailsCreateInput): Promise<StudentDetails> {
     return this.prisma.studentDetails.create({
       data,

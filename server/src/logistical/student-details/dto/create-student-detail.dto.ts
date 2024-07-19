@@ -5,11 +5,10 @@ export class CreateStudentDetailDto {
     userId: string;
 
     @ApiProperty({example: 'GRP1', description: 'Group ID'})
-    groupId: string;
+    groupIds: string[];
 
     @ApiProperty({example: 'MATH', description: 'Subject ID'})
     classNumber: number;
 
     users?: any;
-    groups?: any;
 }

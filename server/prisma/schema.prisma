@@ -62,8 +62,6 @@ model Groups {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Teachers Teachers[]
-  StudentDetails StudentDetails[]
   Homeworks Homeworks[]
 }
 
@@ -72,14 +70,13 @@ model Teachers {
 
   userId    String   @unique
   subjectId String
-  groupId   String
+  groupIds   String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   users      Users?    @relation(fields: [userId], references: [id])
   subjects   Subjects? @relation(fields: [subjectId], references: [id])
-  groups     Groups?   @relation(fields: [groupId], references: [id])
 
   Homeworks Homeworks[]
 }
@@ -88,14 +85,13 @@ model StudentDetails {
   id        String   @id @default(cuid())
 
   userId    String   @unique
-  groupId   String
+  groupIds   String[]
   classNumber Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   users      Users?    @relation(fields: [userId], references: [id])
-  groups     Groups?   @relation(fields: [groupId], references: [id])
 
   HomeworkSubmissions HomeworkSubmissions[]
   Grades Grades[]
