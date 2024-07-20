@@ -54,6 +54,16 @@ export class StudentDetailsController {
     return this.studentDetailsService.findGroupIdsById(userId);
   }
 
+  @Get('group/:groupId')
+  @ApiOperation({summary: 'Get student details by group id'})
+  @ApiResponse({status: 200, description: 'Return student details by group id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 404, description: 'Not found.'})
+
+  async findStudentByGroupId(@Param('groupId') groupId: string) {
+    return this.studentDetailsService.findStudentByGroupId(groupId);
+  }
+
   @Post()
   @ApiOperation({summary: 'Create student detail'})
   @ApiResponse({status: 200, description: 'Create student detail.'})

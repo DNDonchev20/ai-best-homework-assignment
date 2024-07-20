@@ -59,7 +59,7 @@ export class TeacherController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
-  async findTeacherByGroupIdAndUserId(@Param('userId') userId: string) {
+  async findGroupIdsByUserId(@Param('userId') userId: string) {
     return this.teacherService.findGroupIdsById(userId);
   }
 

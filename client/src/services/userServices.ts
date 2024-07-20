@@ -61,6 +61,7 @@ export class UserService {
     return response.data;
   }
 
+  //get current user by user id
   public async getUserById() {
     const user_id = sessionStorage.getItem("user_id");
     try {
@@ -68,6 +69,16 @@ export class UserService {
       return response.data;
     } catch (error) {
       throw new Error("Failed to login user");
+    }
+  }
+
+  //get other user by user id
+  public async getOtherUserByUserId(userId: string) {
+    try {
+      const response = await apiClient.get<User>(`/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to get user");
     }
   }
 }

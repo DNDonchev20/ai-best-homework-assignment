@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "https://homework-server.azurewebsites.net/";
+const apiUrl = "http://localhost:3000/";
 
 export const apiClient = axios.create({
   baseURL: apiUrl,

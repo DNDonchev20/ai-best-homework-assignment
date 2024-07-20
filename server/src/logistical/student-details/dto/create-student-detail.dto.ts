@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateStudentDetailDto {
-    @ApiProperty({example: 'John Doe', description: 'Name of the Student'})
+    @ApiProperty({example: 'clytw4z7f0007kdvm44rnk2ic', description: 'Name of the Student'})
     userId: string;
 
-    @ApiProperty({example: 'GRP1', description: 'Group ID'})
+    @ApiProperty({example: ["clytw3ke30004kdvmlslni198", "clytw432q0006kdvm6rvhhs7k"], description: 'Group ID'})
     groupIds: string[];
 
-    @ApiProperty({example: 'MATH', description: 'Subject ID'})
+    @ApiProperty({example: '1', description: 'Subject ID'})
     classNumber: number;
 
     users?: any;

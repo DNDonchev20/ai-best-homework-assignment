@@ -36,6 +36,16 @@ export class StudentDetailsService {
     return studentDetails.groupIds;
   }
 
+  async findStudentByGroupId(groupId: string): Promise<StudentDetails[]> {
+    return this.prisma.studentDetails.findMany({
+      where: {
+        groupIds: {
+          has: groupId,
+        },
+      },
+    });
+  }
+
   async createStudentDetail(data: Prisma.StudentDetailsCreateInput): Promise<StudentDetails> {
     return this.prisma.studentDetails.create({
       data,
