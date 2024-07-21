@@ -7,7 +7,11 @@ import { RouterLink, RouterView } from "vue-router";
     <nav class="flex items-center justify-between px-20">
       <div class="mx-auto pt-8">
         <a href="/teacherHome" class="px-14 text-[22px] font-semibold">Home</a>
-        <a href="#" class="px-14 text-[22px] font-semibold">Homework</a>
+        <RouterLink to="/teacherHomework"
+          ><a href="/" class="px-14 text-[22px] font-semibold"
+            >Homework</a
+          ></RouterLink
+        >
       </div>
     </nav>
   </header>
