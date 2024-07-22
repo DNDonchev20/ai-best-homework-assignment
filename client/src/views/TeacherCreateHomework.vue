@@ -4,8 +4,10 @@ import TeacherNav from "../components/TeacherView/TeacherNav.vue";
 import { ref, onMounted } from "vue";
 import { TeacherService } from "../services/teacherService";
 import { UserService } from "../services/userServices";
+import { GroupService } from "../services/groupService";
 
 const teacherService = new TeacherService();
+const groupService = new GroupService();
 
 const userService = new UserService();
 const title = ref<string>("");
@@ -13,7 +15,16 @@ const description = ref<string>("");
 const deadline = ref<string>("");
 const maxPoints = ref<number>("");
 const selectClass = ref<string>("");
+const displayGroups = ref([]);
 
+async function createHomework() {
+  console.log(title);
+  console.log(description);
+  console.log(deadline);
+  console.log(maxPoints);
+  console.log(selectClass);
+  //should call backend but later
+}
 onMounted(async () => {
   try {
     const teacher = await teacherService.getTeacherById();
@@ -22,8 +33,9 @@ onMounted(async () => {
     // const groups = await teacherService.getTeacherStudentByTeacherGroup(
     //   groupIds[0],
     // );
-    arrayName.forEach(function (value) {
-      console.log(value);
+    arrayName.forEach(async function (value) {
+      const group = await groupService.getGroupById(value);
+      displayGroups.value.push(group.code);
     });
   } catch (error) {
     console.error(error);
@@ -39,7 +51,7 @@ onMounted(async () => {
     <h1 class="text-center text-6xl font-semibold text-accent">
       Create Homework
     </h1>
-    <form class="mx-auto max-w-[700px]">
+    <form class="mx-auto max-w-[700px]" @submit.prevent="createHomework">
       <div class="mx-auto mt-10 max-w-[370px]">
         <label for="title" class="block text-2xl">Title</label>
         <input
@@ -102,8 +114,13 @@ onMounted(async () => {
           <option value="" disabled selected hidden>
             Please choose a class
           </option>
-          <option value="USER" selected>Student</option>
-          <option value="TEACHER">Teacher</option>
+          <option
+            v-for="(item, index) in displayGroups"
+            :key="index"
+            :value="item"
+          >
+            {{ item }}
+          </option>
         </select>
       </div>
       <button
