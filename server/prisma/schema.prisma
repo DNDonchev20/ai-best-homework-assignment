@@ -31,6 +31,8 @@ model Users {
   role      Role     @default(USER)
   refreshToken String?
 
+  isActivated Boolean @default(true)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -48,7 +50,6 @@ model Subjects {
   updatedAt DateTime @updatedAt
 
   Teachers Teachers[]
-  Homeworks Homeworks[]
 }
 
 model Groups {
@@ -100,13 +101,12 @@ model StudentDetails {
 model Homeworks {
   id        String   @id @default(cuid())
 
-  subjectId String
   teacherId String
   groupId   String
 
   title     String
   description String
-  dueDate   DateTime
+  dueDate   String
 
   maxPoints Int
 
@@ -114,7 +114,6 @@ model Homeworks {
   updatedAt DateTime @updatedAt
 
   group     Groups?   @relation(fields: [groupId], references: [id])
-  subject   Subjects? @relation(fields: [subjectId], references: [id])
   teacher   Teachers? @relation(fields: [teacherId], references: [id])
 
   HomeworkSubmissions HomeworkSubmissions[]
@@ -131,6 +130,8 @@ model HomeworkSubmissions {
   filePath  String
 
   feedback  String? 
+
+  isGraded  Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
