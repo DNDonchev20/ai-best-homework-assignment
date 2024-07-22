@@ -31,6 +31,8 @@ model Users {
   role      Role     @default(USER)
   refreshToken String?
 
+  isActivated Boolean @default(true)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -48,7 +50,6 @@ model Subjects {
   updatedAt DateTime @updatedAt
 
   Teachers Teachers[]
-  Homeworks Homeworks[]
 }
 
 model Groups {
@@ -62,8 +63,6 @@ model Groups {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Teachers Teachers[]
-  StudentDetails StudentDetails[]
   Homeworks Homeworks[]
 }
 
@@ -72,14 +71,13 @@ model Teachers {
 
   userId    String   @unique
   subjectId String
-  groupId   String
+  groupIds   String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   users      Users?    @relation(fields: [userId], references: [id])
   subjects   Subjects? @relation(fields: [subjectId], references: [id])
-  groups     Groups?   @relation(fields: [groupId], references: [id])
 
   Homeworks Homeworks[]
 }
@@ -88,14 +86,13 @@ model StudentDetails {
   id        String   @id @default(cuid())
 
   userId    String   @unique
-  groupId   String
+  groupIds   String[]
   classNumber Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   users      Users?    @relation(fields: [userId], references: [id])
-  groups     Groups?   @relation(fields: [groupId], references: [id])
 
   HomeworkSubmissions HomeworkSubmissions[]
   Grades Grades[]
@@ -104,13 +101,12 @@ model StudentDetails {
 model Homeworks {
   id        String   @id @default(cuid())
 
-  subjectId String
   teacherId String
   groupId   String
 
   title     String
   description String
-  dueDate   DateTime
+  dueDate   String
 
   maxPoints Int
 
@@ -118,7 +114,6 @@ model Homeworks {
   updatedAt DateTime @updatedAt
 
   group     Groups?   @relation(fields: [groupId], references: [id])
-  subject   Subjects? @relation(fields: [subjectId], references: [id])
   teacher   Teachers? @relation(fields: [teacherId], references: [id])
 
   HomeworkSubmissions HomeworkSubmissions[]
@@ -135,6 +130,8 @@ model HomeworkSubmissions {
   filePath  String
 
   feedback  String? 
+
+  isGraded  Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
