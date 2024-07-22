@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { StudentDetailsService } from './student-details.service';
 import { CreateStudentDetailDto } from './dto/create-student-detail.dto';
 import { UpdateStudentDetailDto } from './dto/update-student-detail.dto';
 
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/guards/jwt.guard';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @ApiTags('student-details')
 @Controller('student-details')
@@ -40,12 +44,32 @@ export class StudentDetailsController {
     return this.studentDetailsService.findStudentDetailByUserId(userId);
   }
 
+  @Get('groupId/userId/:userId')
+  @ApiOperation({summary: 'Get student detail by group id and user id'})
+  @ApiResponse({status: 200, description: 'Return student detail by group id and user id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 404, description: 'Not found.'})
+
+  async findStudentDetailByGroupIdAndUserId(@Param('userId') userId: string) {
+    return this.studentDetailsService.findGroupIdsById(userId);
+  }
+
+  @Get('group/:groupId')
+  @ApiOperation({summary: 'Get student details by group id'})
+  @ApiResponse({status: 200, description: 'Return student details by group id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 404, description: 'Not found.'})
+
+  async findStudentByGroupId(@Param('groupId') groupId: string) {
+    return this.studentDetailsService.findStudentByGroupId(groupId);
+  }
+
   @Post()
   @ApiOperation({summary: 'Create student detail'})
   @ApiResponse({status: 200, description: 'Create student detail.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
-
+  
   async createStudentDetail(@Body() createStudentDetailDto: CreateStudentDetailDto) {
     return this.studentDetailsService.createStudentDetail(createStudentDetailDto);
   }

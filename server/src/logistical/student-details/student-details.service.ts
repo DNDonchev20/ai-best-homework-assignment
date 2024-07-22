@@ -25,6 +25,27 @@ export class StudentDetailsService {
     });
   }
 
+  async findGroupIdsById(userId: string): Promise<string[]> {
+    const studentDetails = await this.prisma.studentDetails.findUnique({
+      where: { userId },
+      select: {
+        groupIds: true,
+      },
+    });
+    
+    return studentDetails.groupIds;
+  }
+
+  async findStudentByGroupId(groupId: string): Promise<StudentDetails[]> {
+    return this.prisma.studentDetails.findMany({
+      where: {
+        groupIds: {
+          has: groupId,
+        },
+      },
+    });
+  }
+
   async createStudentDetail(data: Prisma.StudentDetailsCreateInput): Promise<StudentDetails> {
     return this.prisma.studentDetails.create({
       data,

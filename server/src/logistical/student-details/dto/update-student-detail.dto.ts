@@ -3,6 +3,6 @@ import { CreateStudentDetailDto } from './create-student-detail.dto';
 
 export class UpdateStudentDetailDto extends PartialType(CreateStudentDetailDto) {
     userId?: string;   
-    groupId?: string;
+    groupIds?: string[];
     classNumber?: number;
 }

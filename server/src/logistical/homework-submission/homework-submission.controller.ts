@@ -64,6 +64,16 @@ export class HomeworkSubmissionController {
     return this.homeworkSubmissionService.createHomeworkSubmission(createHomeworkSubmissionDto, file);
   }
 
+  @Post('file-path')
+  @ApiOperation({ summary: 'Create homework submission file path' })
+  @ApiResponse({ status: 200, description: 'Create homework submission file path.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+
+  async createHomeworkSubmissionFilePath(@Body() data: CreateHomeworkSubmissionDto): Promise<HomeworkSubmissions> {
+    return this.homeworkSubmissionService.createHomeworkSubmissionFileParh(data);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update homework submission by id' })
   @ApiResponse({ status: 200, description: 'Update homework submission by id.' })

@@ -64,6 +64,12 @@ export class HomeworkSubmissionService {
     });
   }
 
+  async createHomeworkSubmissionFileParh(data: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
+    return this.prisma.homeworkSubmissions.create({
+      data,
+    });
+  }
+
   async updateHomeworkSubmission(id: string, data: Prisma.HomeworkSubmissionsUpdateInput): Promise<HomeworkSubmissions> {
     return this.prisma.homeworkSubmissions.update({
       where: { id },
