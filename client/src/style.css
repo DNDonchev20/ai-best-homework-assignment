@@ -12,7 +12,6 @@ h5,
 h6,
 p,
 input,
-input:focus,
-textarea {
+input:focus {
   font-family: "Hanken Grotesk", sans-serif;
 }
