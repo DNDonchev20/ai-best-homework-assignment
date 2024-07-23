@@ -10,4 +10,37 @@ export class HomeworkSubmissionService {
             throw new Error("Failed to get homework submissions");
         }
     }
+
+    public async createHomeworkSubmission(data: {
+        homeworkId: string;
+        studentId: string;
+        feedback?: string;
+      }): Promise<any> {
+        try {
+          const response = await apiClient.post('/homework-submission', data);
+          return response.data;
+        } catch (error) {
+          console.error('Failed to create homework submission:', error);
+          throw new Error('Failed to create homework submission');
+        }
+      }
+    
+      public async uploadHomeworkFile(submissionId: string, file: File): Promise<void> {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('submissionId', submissionId); 
+    
+            const response = await apiClient.post('/homework-submission/file', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
+            return response.data;
+        } catch (error) {
+            console.error('Failed to upload homework file:', error);
+            throw new Error('Failed to upload homework file');
+        }
+    }
 }

@@ -1,7 +1,7 @@
 export class HomeworkSubmission {
     id: number;
-    homeworkId: number;
-    studentId: number;
+    homeworkId: string;
+    studentId: string;
     filePath: string;
     submittedAt: Date;
     feedback?: string;

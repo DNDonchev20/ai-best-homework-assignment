@@ -40,23 +40,10 @@ export class HomeworkSubmissionService {
     });
   }
 
-  async createHomeworkSubmission(createHomeworkSubmissionDto: CreateHomeworkSubmissionDto, file: Express.Multer.File): Promise<HomeworkSubmissions> {
-    // Upload file to S3
-    const bucketName = 'homework-uploader';
-    const fileUrl = `https://${bucketName}.s3.${awsS3Region}.amazonaws.com/${file.originalname}`;
-
-    await this.s3Client.send(
-      new PutObjectCommand({
-        Bucket: bucketName,
-        Key: file.originalname,
-        Body: file.buffer,
-      })
-    );
-
-    // Create homework submission in the database
+  async createHomeworkSubmissionMetadata(createHomeworkSubmissionDto: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
     const data: Prisma.HomeworkSubmissionsCreateInput = {
       ...createHomeworkSubmissionDto,
-      filePath: fileUrl,
+      filePath: '', 
     };
 
     return this.prisma.homeworkSubmissions.create({
@@ -64,7 +51,33 @@ export class HomeworkSubmissionService {
     });
   }
 
-  async createHomeworkSubmissionFileParh(data: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
+  async uploadHomeworkSubmissionFile(submissionId: string, file: Express.Multer.File): Promise<HomeworkSubmissions> {
+    const bucketName = 'homework-uploader';
+
+    // Encode the file name
+    const encodedFileName = encodeURIComponent(file.originalname)
+
+    const fileUrl = `https://${bucketName}.s3.${awsS3Region}.amazonaws.com/${encodedFileName}`;
+
+    // Upload the file to S3
+    await this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: encodedFileName, // Use encoded file name for S3
+        Body: file.buffer,
+      })
+    );
+
+    // Update the homework submission with the URL
+    return this.prisma.homeworkSubmissions.update({
+      where: { id: submissionId },
+      data: {
+        filePath: fileUrl, // Store the URL in the database
+      },
+    });
+  }
+
+  async createHomeworkSubmissionFilePath(data: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
     return this.prisma.homeworkSubmissions.create({
       data,
     });
