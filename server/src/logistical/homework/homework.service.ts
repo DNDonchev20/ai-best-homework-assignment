@@ -17,6 +17,14 @@ export class HomeworkService {
     });
   }
 
+  async findHomeworksByTeacherId(teacherId: string): Promise<Homeworks[]> {
+    return this.prisma.homeworks.findMany({
+      where: {
+        teacherId,
+      },
+    });
+  }
+
   async create(data: Prisma.HomeworksCreateInput): Promise<Homeworks> {
     return this.prisma.homeworks.create({
       data,

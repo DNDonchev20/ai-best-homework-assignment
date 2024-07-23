@@ -1,7 +1,62 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
-import TeacherNav from "../components/TeacherView/TeacherNav.vue";
 import { ref, onMounted } from "vue";
+import TeacherNav from "../components/TeacherView/TeacherNav.vue";
+import AssignmentCard from "../components/ShowHomeworkView/AssignmentCard.vue";
+import { HomeworkService } from "../services/homeworkService";
+import { HomeworkSubmissionService } from "../services/homeworkSubmissionService";
+import { UserService } from "../services/userServices";
+import { TeacherService } from "../services/teacherService";
+import { StudentDetailsService } from "../services/studentDetailsService";
+
+const homeworks = ref([]);
+const userService = new UserService();
+const homeworkService = new HomeworkService();
+const homeworkSubmissionService = new HomeworkSubmissionService();
+const teacherService = new TeacherService();
+const studentDetailsService = new StudentDetailsService();
+
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+const fetchHomeworks = async () => {
+  try {
+    const user = await userService.getUserById();
+    const userId = user.id;
+
+    const teacher = await teacherService.findTeacherByUserId(userId);
+    const teacherId = teacher.id;
+
+    console.log(teacherId);
+
+    const allHomeworks = await homeworkService.getHomeworksByTeacherId(teacherId);
+
+    console.log(allHomeworks);
+
+    for (const homework of allHomeworks) {
+      console.log(homework.id);
+      await delay(500); 
+      const submissions = await homeworkSubmissionService.findHomeworkSubmissionsByHomeworkId(homework.id);
+      const ungradedSubmissions = submissions.filter(submission => !submission.isGraded);
+
+      for (const submission of ungradedSubmissions) {
+        const studentUserId = await studentDetailsService.findUserIdByStudentId(submission.studentId);
+        await delay(500); 
+        const student = await userService.getOtherUserByUserId(studentUserId);
+        homeworks.value.push({
+          title: homework.title,
+          description: homework.description,
+          studentFirstName: student.firstName,
+          studentLastName: student.lastName,
+          studentEmail: student.email,
+          deadline: submission.submissionDate,
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+  }
+};
+
+onMounted(fetchHomeworks);
 </script>
 
 <template>
@@ -9,110 +64,16 @@ import { ref, onMounted } from "vue";
   <div class="flex w-full flex-col pl-[10vh] pt-[10vh]">
     <h1 class="pb-[7vh] pt-[5vh] text-4xl font-semibold">All homeworks</h1>
     <div class="h-full w-[90%] bg-[#f9faff] p-10">
-      <div
-        class="mb-14 flex min-h-[260px] w-[100%] content-between border-2 border-solid pb-7 pl-7 pt-5 shadow-xl"
-      >
-        <div>
-          <h2 class="pb-4 text-2xl font-semibold">Title of the assignment</h2>
-          <p class="w-[80%] text-lg">
-            Description: Lorem ipsum dolor, sit amet consectetur adipisicing
-            elit. Vitae est illum, veniam delectus consectetur nam aliquid
-            architecto, autem quasi incidunt laborum tempore alias accusamus
-            aut! Hic iure deserunt ullam deleniti! lorem60
-          </p>
-        </div>
-        <div class="flex h-full flex-col items-end justify-between">
-          <div>
-            <p class="pb-2 text-xl font-semibold">Class: 9v</p>
-            <p class="pb-2 text-xl font-semibold">Student: mincho@gmail.com</p>
-            <p class="w-[300px] text-lg font-semibold">
-              Deadline: 24-09-2024 24:00 PM
-            </p>
-          </div>
-          <a
-            class="text-md mr-12 mt-20 cursor-pointer rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
-            >Grade</a
-          >
-        </div>
-      </div>
-      <div
-        class="mb-14 flex min-h-[260px] w-[100%] content-between border-2 border-solid pb-7 pl-7 pt-5 shadow-xl"
-      >
-        <div>
-          <h2 class="pb-4 text-2xl font-semibold">Title of the assignment</h2>
-          <p class="w-[80%] text-lg">
-            Description: Lorem ipsum dolor, sit amet consectetur adipisicing
-            elit. Vitae est illum, veniam delectus consectetur nam aliquid
-            architecto, autem quasi incidunt laborum tempore alias accusamus
-            aut! Hic iure deserunt ullam deleniti! lorem60
-          </p>
-        </div>
-        <div class="flex h-full flex-col items-end justify-between">
-          <div>
-            <p class="pb-2 text-xl font-semibold">Class: 9v</p>
-            <p class="pb-2 text-xl font-semibold">Student: mincho@gmail.com</p>
-            <p class="w-[300px] text-lg font-semibold">
-              Deadline: 24-09-2024 24:00 PM
-            </p>
-          </div>
-          <a
-            class="text-md mr-12 mt-20 cursor-pointer rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
-            >Grade</a
-          >
-        </div>
-      </div>
-      <div
-        class="mb-14 flex min-h-[260px] w-[100%] content-between border-2 border-solid pb-7 pl-7 pt-5 shadow-xl"
-      >
-        <div>
-          <h2 class="pb-4 text-2xl font-semibold">Title of the assignment</h2>
-          <p class="w-[80%] text-lg">
-            Description: Lorem ipsum dolor, sit amet consectetur adipisicing
-            elit. Vitae est illum, veniam delectus consectetur nam aliquid
-            architecto, autem quasi incidunt laborum tempore alias accusamus
-            aut! Hic iure deserunt ullam deleniti! lorem60
-          </p>
-        </div>
-        <div class="flex h-full flex-col items-end justify-between">
-          <div>
-            <p class="pb-2 text-xl font-semibold">Class: 9v</p>
-            <p class="pb-2 text-xl font-semibold">Student: mincho@gmail.com</p>
-            <p class="w-[300px] text-lg font-semibold">
-              Deadline: 24-09-2024 24:00 PM
-            </p>
-          </div>
-          <a
-            class="text-md mr-12 mt-20 cursor-pointer rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
-            >Grade</a
-          >
-        </div>
-      </div>
-      <div
-        class="mb-14 flex min-h-[260px] w-[100%] content-between border-2 border-solid pb-7 pl-7 pt-5 shadow-xl"
-      >
-        <div>
-          <h2 class="pb-4 text-2xl font-semibold">Title of the assignment</h2>
-          <p class="w-[80%] text-lg">
-            Description: Lorem ipsum dolor, sit amet consectetur adipisicing
-            elit. Vitae est illum, veniam delectus consectetur nam aliquid
-            architecto, autem quasi incidunt laborum tempore alias accusamus
-            aut! Hic iure deserunt ullam deleniti! lorem60
-          </p>
-        </div>
-        <div class="flex h-full flex-col items-end justify-between">
-          <div>
-            <p class="pb-2 text-xl font-semibold">Class: 9v</p>
-            <p class="pb-2 text-xl font-semibold">Student: mincho@gmail.com</p>
-            <p class="w-[300px] text-lg font-semibold">
-              Deadline: 24-09-2024 24:00 PM
-            </p>
-          </div>
-          <a
-            class="text-md mr-12 mt-20 cursor-pointer rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
-            >Grade</a
-          >
-        </div>
-      </div>
+      <AssignmentCard
+        v-for="homework in homeworks"
+        :key="homework.title + homework.studentEmail"
+        :title="homework.title"
+        :description="homework.description"
+        :studentFirstName="homework.studentFirstName"
+        :studentLastName="homework.studentLastName"
+        :studentEmail="homework.studentEmail"
+        :deadline="homework.deadline"
+      />
     </div>
   </div>
 </template>

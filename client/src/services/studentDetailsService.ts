@@ -10,4 +10,13 @@ export class StudentDetailsService {
             throw new Error("Failed to get students");
         }
     }
+
+    public async findUserIdByStudentId(studentId: string) {
+        try {
+            const response = await apiClient.get<string>(`/student-details/userId/id/${studentId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error("Failed to get user id");
+        }
+    }
 }

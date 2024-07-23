@@ -32,6 +32,16 @@ export class HomeworkController {
     return this.homeworkService.findOne(id);
   }
 
+  @Get('teacher/:teacherId')
+  @ApiOperation({summary: 'Get homeworks by teacher id'})
+  @ApiResponse({status: 200, description: 'Return homeworks by teacher id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 404, description: 'Not found.'})
+
+  async getHomeworksByTeacherId(@Param('teacherId') teacherId: string): Promise<Homeworks[]> {
+    return this.homeworkService.findHomeworksByTeacherId(teacherId);
+  }
+
   @Post()
   @ApiOperation({summary: 'Create homework'})
   @ApiResponse({status: 200, description: 'Create homework.'})
