@@ -6,4 +6,9 @@ export class HomeworkService {
         const response = await apiClient.get<Homework>(`/homework/teacher/${teacherId}`);
         return response.data;
     }
+
+    public async createHomework(homework: Homework) {
+        const response = await apiClient.post<Homework>("/homework", homework);
+        return response.data;
+    }
 }

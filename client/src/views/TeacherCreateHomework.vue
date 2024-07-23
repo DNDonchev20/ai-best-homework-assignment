@@ -5,9 +5,11 @@ import { ref, onMounted } from "vue";
 import { TeacherService } from "../services/teacherService";
 import { UserService } from "../services/userServices";
 import { GroupService } from "../services/groupService";
+import { HomeworkService } from "../services/homeworkService";
 
 const teacherService = new TeacherService();
 const groupService = new GroupService();
+const homeworkService = new HomeworkService();
 
 const userService = new UserService();
 const title = ref<string>("");
@@ -23,19 +25,31 @@ async function createHomework() {
   console.log(deadline);
   console.log(maxPoints);
   console.log(selectClass);
-  //should call backend but later
+
+  const user = await userService.getUserById();
+  const userId = user.id;
+
+  const teacher = await teacherService.findTeacherByUserId(userId);
+  const teacherId = teacher.id;
+
+  homeworkService.createHomework({
+    teacherId: teacherId,
+    groupId: selectClass.value,
+    title: title.value,
+    description: description.value,
+    dueDate: deadline.value,
+    maxPoints: maxPoints.value,
+  });
 }
+
 onMounted(async () => {
   try {
     const teacher = await teacherService.getTeacherById();
-    let arrayName: string[] = teacher.groupIds;
-    // const groupsDisplay = ref<string[]>([]);
-    // const groups = await teacherService.getTeacherStudentByTeacherGroup(
-    //   groupIds[0],
-    // );
-    arrayName.forEach(async function (value) {
+    let groups: string[] = teacher.groupIds;
+
+    groups.forEach(async function (value) {
       const group = await groupService.getGroupById(value);
-      displayGroups.value.push(group.code);
+      displayGroups.value.push(group);
     });
   } catch (error) {
     console.error(error);
@@ -117,9 +131,9 @@ onMounted(async () => {
           <option
             v-for="(item, index) in displayGroups"
             :key="index"
-            :value="item"
+            :value="item.id"
           >
-            {{ item }}
+            {{ item.code }}
           </option>
         </select>
       </div>

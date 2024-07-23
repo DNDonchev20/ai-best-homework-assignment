@@ -25,14 +25,9 @@ const fetchHomeworks = async () => {
     const teacher = await teacherService.findTeacherByUserId(userId);
     const teacherId = teacher.id;
 
-    console.log(teacherId);
-
     const allHomeworks = await homeworkService.getHomeworksByTeacherId(teacherId);
 
-    console.log(allHomeworks);
-
     for (const homework of allHomeworks) {
-      console.log(homework.id);
       await delay(500); 
       const submissions = await homeworkSubmissionService.findHomeworkSubmissionsByHomeworkId(homework.id);
       const ungradedSubmissions = submissions.filter(submission => !submission.isGraded);

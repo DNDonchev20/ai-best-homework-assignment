@@ -1,5 +1,4 @@
 export interface Homework {
-    id: number;
     teacherId: string;
     groupId: string;
     title: string;
