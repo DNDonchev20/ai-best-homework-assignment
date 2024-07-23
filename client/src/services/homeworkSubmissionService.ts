@@ -43,4 +43,13 @@ export class HomeworkSubmissionService {
             throw new Error('Failed to upload homework file');
         }
     }
+
+    public async getHomeworkSubmissionById(submissionId: string) {
+        try {
+            const response = await apiClient.get<HomeworkSubmission>(`/homework-submission/${submissionId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error("Failed to get homework submission");
+        }
+    }
 }

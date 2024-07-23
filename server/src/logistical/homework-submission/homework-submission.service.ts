@@ -54,25 +54,22 @@ export class HomeworkSubmissionService {
   async uploadHomeworkSubmissionFile(submissionId: string, file: Express.Multer.File): Promise<HomeworkSubmissions> {
     const bucketName = 'homework-uploader';
 
-    // Encode the file name
     const encodedFileName = encodeURIComponent(file.originalname)
 
     const fileUrl = `https://${bucketName}.s3.${awsS3Region}.amazonaws.com/${encodedFileName}`;
 
-    // Upload the file to S3
     await this.s3Client.send(
       new PutObjectCommand({
         Bucket: bucketName,
-        Key: encodedFileName, // Use encoded file name for S3
+        Key: encodedFileName, 
         Body: file.buffer,
       })
     );
 
-    // Update the homework submission with the URL
     return this.prisma.homeworkSubmissions.update({
       where: { id: submissionId },
       data: {
-        filePath: fileUrl, // Store the URL in the database
+        filePath: fileUrl
       },
     });
   }
