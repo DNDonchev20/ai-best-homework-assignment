@@ -8,6 +8,7 @@ import TeacherCreateHomework from "../views/TeacherCreateHomework.vue";
 import ShowHomeworkView from "../views/ShowHomeworkView.vue";
 import HomeworkView from "../views/HomeworkView.vue";
 import SubmitHomeworkView from "../views/SubmitHomeworkView.vue";
+import ProfileView from "../views/ProfileView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,6 +83,14 @@ const router = createRouter({
       component: SubmitHomeworkView,
       meta: {
         title: "Submit Homework",
+      },
+    },
+    {
+      path: "/profile",
+      name: "Profile",
+      component: ProfileView,
+      meta: {
+        title: "Profile",
       },
     },
   ],
