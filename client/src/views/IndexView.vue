@@ -7,14 +7,16 @@ import { ref } from "vue";
     <header>
       <nav class="flex items-center justify-between px-20" aria-label="Global">
         <div class="mx-auto pt-8">
-          <a href="#" class="px-14 text-[22px] font-semibold">Start</a>
-          <a href="#" class="px-14 text-[22px] font-semibold">Features</a>
-          <a href="#" class="px-14 text-[22px] font-semibold">Roles</a>
+          <a href="#start" class="px-14 text-[22px] font-semibold">Start</a>
+          <a href="#features" class="px-14 text-[22px] font-semibold"
+            >Features</a
+          >
+          <a href="#roles" class="px-14 text-[22px] font-semibold">Roles</a>
         </div>
       </nav>
     </header>
   </div>
-  <div class="flex flex-row items-start justify-between">
+  <div class="flex flex-row items-start justify-between" id="start">
     <div class="max-w-3xl pl-20 pr-20 pt-40 2xl:pt-56">
       <h1 class="text-4xl font-bold tracking-tight xl:text-6xl">
         Homework assignments made easy
@@ -40,7 +42,7 @@ import { ref } from "vue";
       class="h-auto min-w-[700px] pr-20 pt-40 2xl:min-w-[800px] 2xl:pt-52"
     />
   </div>
-  <div class="mt-48 bg-secondary pb-20 pt-20">
+  <div class="mt-48 bg-secondary pb-20 pt-20" id="features">
     <h2 class="text-center font-semibold text-white md:text-5xl">
       Lorem ipsum dolor sit amet.
     </h2>
@@ -59,7 +61,7 @@ import { ref } from "vue";
       </div>
     </div>
   </div>
-  <div class="flex flex-row justify-center gap-40 pt-48">
+  <div class="flex flex-row justify-center gap-40 pt-48" id="roles">
     <img
       src="../assets/images/heroImage.png"
       alt="image of our app"

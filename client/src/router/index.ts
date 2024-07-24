@@ -6,11 +6,11 @@ import TeacherView from "../views/TeacherView.vue";
 import StudentView from "../views/StudentView.vue";
 import TeacherCreateHomework from "../views/TeacherCreateHomework.vue";
 import ShowHomeworkView from "../views/ShowHomeworkView.vue";
-import HomeworkView from "../views/HomeworkView.vue";
 import SubmitHomeworkView from "../views/SubmitHomeworkView.vue";
 import GradeHomeworkView from "../views/GradeHomeworkView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import StudentHomeworkView from "../views/StudentHomeworkView.vue";
+import { ifLogged } from "../services/authenticationRouter";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +46,21 @@ const router = createRouter({
       meta: {
         title: "Teacher Home",
       },
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next();
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next("/login");
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
+      },
     },
     {
       path: "/studentHome",
@@ -53,6 +68,21 @@ const router = createRouter({
       component: StudentView,
       meta: {
         title: "Student Home",
+      },
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next("/login");
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next();
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
       },
     },
     {
@@ -62,6 +92,21 @@ const router = createRouter({
       meta: {
         title: "Create Homework",
       },
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next();
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next("/login");
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
+      },
     },
     {
       path: "/showHomework",
@@ -70,29 +115,67 @@ const router = createRouter({
       meta: {
         title: "Show Homework",
       },
-    },
-    {
-      path: "/homework",
-      name: "homework",
-      component: HomeworkView,
-      meta: {
-        title: "Homework",
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next();
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next("/login");
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
       },
     },
+
     {
-      path: "/submitHomework",
-      name: "Submit Homework",
+      path: "/submitHomework/:homeworkId",
+      name: "SubmitHomework",
       component: SubmitHomeworkView,
       meta: {
         title: "Submit Homework",
       },
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next("/login");
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next();
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
+      },
     },
     {
-      path: "/gradeHomework",
-      name: "Grade Homework",
+      path: "/gradeHomework/:userId/:homeworkId",
+      name: "GradeHomework",
       component: GradeHomeworkView,
       meta: {
         title: "Grade Homework",
+      },
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next();
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next("/login");
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
       },
     },
     {
@@ -102,6 +185,21 @@ const router = createRouter({
       meta: {
         title: "Profile",
       },
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next("/login");
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next();
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
+      },
     },
     {
       path: "/studentHomework/:code",
@@ -109,6 +207,21 @@ const router = createRouter({
       component: StudentHomeworkView,
       meta: {
         title: "Student Homework",
+      },
+      beforeEnter: async (to, from, next) => {
+        switch ((await ifLogged()) as any) {
+          case "Teacher":
+            next("/login");
+            console.log("it is teacher");
+            break;
+          case "Student":
+            console.log("it is user");
+            next();
+            break;
+          default:
+            console.log(ifLogged());
+            next("/login");
+        }
       },
     },
   ],

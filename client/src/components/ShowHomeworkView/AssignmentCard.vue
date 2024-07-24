@@ -14,10 +14,17 @@
         <p class="pb-2 text-xl font-semibold">Email: {{ studentEmail }}</p>
         <p class="w-72 text-lg font-semibold">Deadline: {{ deadline }}</p>
       </div>
-      <a
-        class="text-md mt-20 cursor-pointer rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
-        >Grade</a
+      <RouterLink
+        :to="{
+          name: 'GradeHomework',
+          params: { userId: userId, homeworkId: homeworkId },
+        }"
       >
+        <a
+          class="text-md mt-20 cursor-pointer rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
+          >Grade</a
+        >
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -30,6 +37,8 @@ defineProps<{
   studentLastName: string;
   studentEmail: string;
   deadline: string;
+  homeworkId: string;
+  userId: string;
 }>();
 </script>
 

@@ -66,7 +66,7 @@ export class UserService {
     const user_id = sessionStorage.getItem("user_id");
     try {
       const response = await apiClient.get<User>(`/user/${user_id}`);
-      return response.data;
+      return response.data as User;
     } catch (error) {
       throw new Error("Failed to login user");
     }

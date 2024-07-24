@@ -15,7 +15,7 @@ const homeworkSubmissionService = new HomeworkSubmissionService();
 const teacherService = new TeacherService();
 const studentDetailsService = new StudentDetailsService();
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const fetchHomeworks = async () => {
   try {
@@ -25,18 +25,33 @@ const fetchHomeworks = async () => {
     const teacher = await teacherService.findTeacherByUserId(userId);
     const teacherId = teacher.id;
 
-    const allHomeworks = await homeworkService.getHomeworksByTeacherId(teacherId);
+    const allHomeworks =
+      await homeworkService.getHomeworksByTeacherId(teacherId);
 
     for (const homework of allHomeworks) {
-      await delay(500); 
-      const submissions = await homeworkSubmissionService.findHomeworkSubmissionsByHomeworkId(homework.id);
-      const ungradedSubmissions = submissions.filter(submission => !submission.isGraded);
+      await delay(500);
+      const submissions =
+        await homeworkSubmissionService.findHomeworkSubmissionsByHomeworkId(
+          homework.id,
+        );
+
+      const ungradedSubmissions = submissions.filter(
+        (submission) => !submission.isGraded,
+      );
 
       for (const submission of ungradedSubmissions) {
-        const studentUserId = await studentDetailsService.findUserIdByStudentId(submission.studentId);
-        await delay(500); 
+        const studentUserId = await studentDetailsService.findUserIdByStudentId(
+          submission.studentId,
+        );
+        await delay(500);
         const student = await userService.getOtherUserByUserId(studentUserId);
         homeworks.value.push({
+          userId: studentUserId,
+          id: homework.id,
+          title: homework.title,
+          description: homework.description,
+          studentFirstName: student.firstName,
+          studentLastName: student.lastName,
           title: homework.title,
           description: homework.description,
           studentFirstName: student.firstName,
@@ -68,6 +83,8 @@ onMounted(fetchHomeworks);
         :studentLastName="homework.studentLastName"
         :studentEmail="homework.studentEmail"
         :deadline="homework.deadline"
+        :homeworkId="homework.id"
+        :userId="homework.userId"
       />
     </div>
   </div>

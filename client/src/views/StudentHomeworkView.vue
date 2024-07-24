@@ -6,6 +6,7 @@
   </div>
   <div class="w-full pl-[10vh] pt-[10vh]">
     <h1 class="text-4xl font-semibold">Homework for {{ group?.name }}</h1>
+
     <div
       class="mb-[60px] flex min-h-[170px] w-[80%] flex-row justify-between border-2 border-solid pb-5 pl-7 pr-7 pt-5 shadow-xl"
       v-for="homework in homeworkDisplat"
@@ -20,7 +21,12 @@
         <p class="text-lg">{{ homework.dueDate }}</p>
         <p>Max points: {{ homework.maxPoints }}</p>
         <div class="pt-10">
-          <RouterLink to="/submitHomework">
+          <RouterLink
+            :to="{
+              name: 'SubmitHomework',
+              params: { homeworkId: homework.id },
+            }"
+          >
             <a
               href="#"
               class="text-md rounded bg-accent/100 px-5 py-2 font-semibold text-white hover:bg-accent/90"
