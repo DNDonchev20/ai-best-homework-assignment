@@ -52,4 +52,34 @@ export class HomeworkSubmissionService {
             throw new Error("Failed to get homework submission");
         }
     }
+
+    public async getHomeworkSubmissionByUserIdAndHomeworkId(userId: string, homeworkId: string) {
+        try {
+            const response = await apiClient.get<HomeworkSubmission>(`/homework-submission/userId/${userId}/homeworkId/${homeworkId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error("Failed to get homework submission");
+        }
+    }
+
+    public async checkSubmissionExists(userId: string, homeworkId: string) {
+        try {
+            const response = await apiClient.get<boolean>(
+                `/homework-submission/id/userId/${userId}/homeworkId/${homeworkId}`,
+            );
+
+            return response.data;
+        } catch (error) {
+            throw new Error("Failed to check submission id exists");
+        }
+    }
+
+    public async deleteHomeworkSubmission(submissionId: string) {
+        try {
+            const response = await apiClient.delete(`/homework-submission/${submissionId}`);
+            return response.data;
+        } catch (error) {
+            throw new Error("Failed to delete homework submission");
+        }
+    }
 }

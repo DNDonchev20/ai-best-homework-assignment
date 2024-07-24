@@ -28,6 +28,33 @@ export class HomeworkSubmissionService {
     });
   }
 
+  async getSubmissionDetailsByUserIdAndHomeworkId(userId: string, homeworkId: string): Promise<HomeworkSubmissions> {
+    return this.prisma.homeworkSubmissions.findFirst({
+      where: {
+        studentId: userId,
+        homeworkId,
+      },
+    });
+  }
+
+  async checkSubmissionExists(studentId: string, homeworkId: string): Promise<boolean> {
+    try {
+      const homeworkSubmission = await this.prisma.homeworkSubmissions.findFirst({
+        where: {
+          studentId,
+          homeworkId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      return !!homeworkSubmission?.id;
+    } catch (error) {
+      return false;
+    }
+  }
+ 
   async findHomeworkSubmissionByUserId(studentId: string): Promise<HomeworkSubmissions[]> {
     return this.prisma.homeworkSubmissions.findMany({
       where: { studentId },

@@ -31,6 +31,26 @@ export class HomeworkSubmissionController {
     return this.homeworkSubmissionService.findHomeworkSubmissionById(id);
   }
 
+  @Get('userId/:userId/homeworkId/:homeworkId')
+  @ApiOperation({ summary: 'Get submission details by user id and homework id' })
+  @ApiResponse({ status: 200, description: 'Return submission details by user id and homework id.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+
+  async getSubmissionDetailsByUserIdAndHomeworkId(@Param('userId') userId: string, @Param('homeworkId') homeworkId: string): Promise<HomeworkSubmissions> {
+    return this.homeworkSubmissionService.getSubmissionDetailsByUserIdAndHomeworkId(userId, homeworkId);
+  }
+
+  @Get('id/userId/:userId/homeworkId/:homeworkId')
+  @ApiOperation({ summary: 'Get submission id by user id and homework id' })
+  @ApiResponse({ status: 200, description: 'Return submission id by user id and homework id.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+
+  async checkSubmissionExists(@Param('userId') userId: string, @Param('homeworkId') homeworkId: string): Promise<boolean> {
+    return this.homeworkSubmissionService.checkSubmissionExists(userId, homeworkId);
+  }
+
   @Get('student/:studentId')
   @ApiOperation({ summary: 'Get homework submission by student id' })
   @ApiResponse({ status: 200, description: 'Return homework submission by student id.' })
