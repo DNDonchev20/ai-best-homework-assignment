@@ -6,6 +6,7 @@ import StudentView from "../components/StudentView/StudentNav.vue";
 import { User } from "../models/user";
 import { StudentDetailsService } from "../services/studentDetailsService";
 import { GroupService } from "../services/groupService";
+import { Group } from "../models/group";
 
 const userService = new UserService();
 const groupService = new GroupService();
@@ -13,6 +14,7 @@ const studentDetailsService = new StudentDetailsService();
 const user = ref<User>();
 const classes = ref<number>();
 const code = ref<string>();
+const groups = ref<Group[]>([]);
 
 onMounted(async () => {
   try {
@@ -20,11 +22,11 @@ onMounted(async () => {
     user.value = userResponse;
     const studentDetailsResponse =
       await studentDetailsService.getDetailsByUserId(userResponse.id + "");
-    const groupsResponse = await groupService.getGroupById(
-      studentDetailsResponse.groupIds + "",
-    );
-    classes.value = groupsResponse.year;
-    code.value = groupsResponse.code;
+
+    for (let group of studentDetailsResponse.groupIds) {
+      const groupsResponse = await groupService.getGroupById(group + "");
+      groups.value.push(groupsResponse);
+    }
   } catch (error) {
     console.error("Failed to fetch user or subject:", error);
   }
@@ -49,11 +51,12 @@ onMounted(async () => {
       <p class="text-xl">
         <span class="font-semibold">Role:</span> {{ user?.role }}
       </p>
-      <p class="text-xl">
-        <span class="font-semibold">Class:</span> {{ code }}
-      </p>
-      <p class="text-xl">
-        <span class="font-semibold">Year:</span> {{ classes }}
+      <p class="w-[300px] text-xl">
+        <span class="font-semibold">Class:</span>
+
+        <span v-for="group in groups" class="pl-4">
+          {{ group.name }} {{ group.code }} ;
+        </span>
       </p>
     </div>
   </div>
