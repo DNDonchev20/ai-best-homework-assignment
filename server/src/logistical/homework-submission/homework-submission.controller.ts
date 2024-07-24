@@ -31,6 +31,26 @@ export class HomeworkSubmissionController {
     return this.homeworkSubmissionService.findHomeworkSubmissionById(id);
   }
 
+  @Get('userId/:userId/homeworkId/:homeworkId')
+  @ApiOperation({ summary: 'Get submission details by user id and homework id' })
+  @ApiResponse({ status: 200, description: 'Return submission details by user id and homework id.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+
+  async getSubmissionDetailsByUserIdAndHomeworkId(@Param('userId') userId: string, @Param('homeworkId') homeworkId: string): Promise<HomeworkSubmissions> {
+    return this.homeworkSubmissionService.getSubmissionDetailsByUserIdAndHomeworkId(userId, homeworkId);
+  }
+
+  @Get('id/userId/:userId/homeworkId/:homeworkId')
+  @ApiOperation({ summary: 'Get submission id by user id and homework id' })
+  @ApiResponse({ status: 200, description: 'Return submission id by user id and homework id.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+
+  async checkSubmissionExists(@Param('userId') userId: string, @Param('homeworkId') homeworkId: string): Promise<boolean> {
+    return this.homeworkSubmissionService.checkSubmissionExists(userId, homeworkId);
+  }
+
   @Get('student/:studentId')
   @ApiOperation({ summary: 'Get homework submission by student id' })
   @ApiResponse({ status: 200, description: 'Return homework submission by student id.' })
@@ -50,18 +70,25 @@ export class HomeworkSubmissionController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create homework submission' })
-  @ApiResponse({ status: 200, description: 'Create homework submission.' })
+  @ApiOperation({ summary: 'Create homework submission metadata' })
+  @ApiResponse({ status: 200, description: 'Create homework submission metadata.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
-  @UseInterceptors(FileInterceptor('file'))
-  async createHomeworkSubmission(
-    @Body() createHomeworkSubmissionDto: CreateHomeworkSubmissionDto,
-    @UploadedFile(new ParseFilePipe({
-      validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 })],
-    })) file: Express.Multer.File
+  async createHomeworkSubmissionMetadata(
+    @Body() createHomeworkSubmissionDto: CreateHomeworkSubmissionDto
   ): Promise<HomeworkSubmissions> {
-    return this.homeworkSubmissionService.createHomeworkSubmission(createHomeworkSubmissionDto, file);
+    return this.homeworkSubmissionService.createHomeworkSubmissionMetadata(createHomeworkSubmissionDto);
+  }
+
+  @Post('file')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadHomeworkSubmissionFile(
+      @UploadedFile(new ParseFilePipe({
+          validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 })],
+      })) file: Express.Multer.File,
+      @Body('submissionId') submissionId: string 
+  ): Promise<HomeworkSubmissions> {
+      return this.homeworkSubmissionService.uploadHomeworkSubmissionFile(submissionId, file);
   }
 
   @Post('file-path')
@@ -71,7 +98,7 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 404, description: 'Not found.' })
 
   async createHomeworkSubmissionFilePath(@Body() data: CreateHomeworkSubmissionDto): Promise<HomeworkSubmissions> {
-    return this.homeworkSubmissionService.createHomeworkSubmissionFileParh(data);
+    return this.homeworkSubmissionService.createHomeworkSubmissionFilePath(data);
   }
 
   @Patch(':id')

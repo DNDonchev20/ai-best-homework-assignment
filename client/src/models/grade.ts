@@ -1,7 +1,6 @@
-export class Grade {
+export interface Grade {
     id: string;
     teacherId: string;
-    studentId: string;
     homeworkSubmissionId: string;
     grade: number;
     percentage: number;

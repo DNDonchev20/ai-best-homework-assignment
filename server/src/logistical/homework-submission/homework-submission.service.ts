@@ -28,6 +28,33 @@ export class HomeworkSubmissionService {
     });
   }
 
+  async getSubmissionDetailsByUserIdAndHomeworkId(userId: string, homeworkId: string): Promise<HomeworkSubmissions> {
+    return this.prisma.homeworkSubmissions.findFirst({
+      where: {
+        studentId: userId,
+        homeworkId,
+      },
+    });
+  }
+
+  async checkSubmissionExists(studentId: string, homeworkId: string): Promise<boolean> {
+    try {
+      const homeworkSubmission = await this.prisma.homeworkSubmissions.findFirst({
+        where: {
+          studentId,
+          homeworkId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      return !!homeworkSubmission?.id;
+    } catch (error) {
+      return false;
+    }
+  }
+ 
   async findHomeworkSubmissionByUserId(studentId: string): Promise<HomeworkSubmissions[]> {
     return this.prisma.homeworkSubmissions.findMany({
       where: { studentId },
@@ -40,23 +67,10 @@ export class HomeworkSubmissionService {
     });
   }
 
-  async createHomeworkSubmission(createHomeworkSubmissionDto: CreateHomeworkSubmissionDto, file: Express.Multer.File): Promise<HomeworkSubmissions> {
-    // Upload file to S3
-    const bucketName = 'homework-uploader';
-    const fileUrl = `https://${bucketName}.s3.${awsS3Region}.amazonaws.com/${file.originalname}`;
-
-    await this.s3Client.send(
-      new PutObjectCommand({
-        Bucket: bucketName,
-        Key: file.originalname,
-        Body: file.buffer,
-      })
-    );
-
-    // Create homework submission in the database
+  async createHomeworkSubmissionMetadata(createHomeworkSubmissionDto: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
     const data: Prisma.HomeworkSubmissionsCreateInput = {
       ...createHomeworkSubmissionDto,
-      filePath: fileUrl,
+      filePath: '', 
     };
 
     return this.prisma.homeworkSubmissions.create({
@@ -64,7 +78,30 @@ export class HomeworkSubmissionService {
     });
   }
 
-  async createHomeworkSubmissionFileParh(data: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
+  async uploadHomeworkSubmissionFile(submissionId: string, file: Express.Multer.File): Promise<HomeworkSubmissions> {
+    const bucketName = 'homework-uploader';
+
+    const encodedFileName = encodeURIComponent(file.originalname)
+
+    const fileUrl = `https://${bucketName}.s3.${awsS3Region}.amazonaws.com/${encodedFileName}`;
+
+    await this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: encodedFileName, 
+        Body: file.buffer,
+      })
+    );
+
+    return this.prisma.homeworkSubmissions.update({
+      where: { id: submissionId },
+      data: {
+        filePath: fileUrl
+      },
+    });
+  }
+
+  async createHomeworkSubmissionFilePath(data: Prisma.HomeworkSubmissionsCreateInput): Promise<HomeworkSubmissions> {
     return this.prisma.homeworkSubmissions.create({
       data,
     });

@@ -93,9 +93,6 @@ model StudentDetails {
   updatedAt DateTime @updatedAt
 
   users      Users?    @relation(fields: [userId], references: [id])
-
-  HomeworkSubmissions HomeworkSubmissions[]
-  Grades Grades[]
 }
 
 model Homeworks {
@@ -115,8 +112,6 @@ model Homeworks {
 
   group     Groups?   @relation(fields: [groupId], references: [id])
   teacher   Teachers? @relation(fields: [teacherId], references: [id])
-
-  HomeworkSubmissions HomeworkSubmissions[]
 }
 
 model HomeworkSubmissions {
@@ -127,7 +122,7 @@ model HomeworkSubmissions {
 
   submissionDate DateTime @default(now())
 
-  filePath  String
+  filePath  String?
 
   feedback  String? 
 
@@ -136,15 +131,13 @@ model HomeworkSubmissions {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  homework  Homeworks? @relation(fields: [homeworkId], references: [id])
-  student   StudentDetails? @relation(fields: [studentId], references: [id])
-
   Grades Grades[]
 }
 
 model Grades {
   id        String   @id @default(cuid())
 
+  teacherId String
   studentId String
   homeworkSubmissionId String @unique
 
@@ -155,6 +148,5 @@ model Grades {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  students   StudentDetails? @relation(fields: [studentId], references: [id])
   homeworkSubmissions HomeworkSubmissions? @relation(fields: [homeworkSubmissionId], references: [id])
 }

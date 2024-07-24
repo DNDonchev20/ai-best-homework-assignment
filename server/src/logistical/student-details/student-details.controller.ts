@@ -93,4 +93,14 @@ export class StudentDetailsController {
   async updateStudentDetail(@Param('id') id: string, @Body() updateStudentDetailDto: UpdateStudentDetailDto) {
     return this.studentDetailsService.updateStudentDetail(id, updateStudentDetailDto);
   }
+
+  @Delete(':id')
+  @ApiOperation({summary: 'Delete student detail by id'})
+  @ApiResponse({status: 200, description: 'Delete student detail by id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  @ApiResponse({status: 404, description: 'Not found.'})
+
+  async removeStudentDetail(@Param('id') id: string) {
+    return this.studentDetailsService.removeStudentDetail(id);
+  }
 }

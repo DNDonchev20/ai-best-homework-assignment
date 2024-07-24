@@ -7,6 +7,10 @@ import StudentView from "../views/StudentView.vue";
 import TeacherCreateHomework from "../views/TeacherCreateHomework.vue";
 import ShowHomeworkView from "../views/ShowHomeworkView.vue";
 import HomeworkView from "../views/HomeworkView.vue";
+import SubmitHomeworkView from "../views/SubmitHomeworkView.vue";
+import GradeHomeworkView from "../views/GradeHomeworkView.vue";
+import ProfileView from "../views/ProfileView.vue";
+import StudentHomeworkView from "../views/StudentHomeworkView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -73,6 +77,38 @@ const router = createRouter({
       component: HomeworkView,
       meta: {
         title: "Homework",
+      },
+    },
+    {
+      path: "/submitHomework",
+      name: "Submit Homework",
+      component: SubmitHomeworkView,
+      meta: {
+        title: "Submit Homework",
+      },
+    },
+    {
+      path: "/gradeHomework",
+      name: "Grade Homework",
+      component: GradeHomeworkView,
+      meta: {
+        title: "Grade Homework",
+      },
+    },
+    {
+      path: "/profile",
+      name: "Profile",
+      component: ProfileView,
+      meta: {
+        title: "Profile",
+      },
+    },
+    {
+      path: "/studentHomework/:code",
+      name: "StudentHomework",
+      component: StudentHomeworkView,
+      meta: {
+        title: "Student Homework",
       },
     },
   ],

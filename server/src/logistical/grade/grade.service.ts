@@ -19,15 +19,18 @@ export class GradeService {
     });
   }
 
-  async findGradeByStudentId(studentId: string): Promise<Grades[]> {
-    return this.prisma.grades.findMany({
-      where: { studentId },
-    });
-  }
-
   async findGradeByHomeworkSubmissionId(homeworkSubmissionId: string): Promise<Grades> {
     return this.prisma.grades.findUnique({
       where: { homeworkSubmissionId },
+    });
+  }
+
+  async findGradeByHomeworkSubmissionIdAndStudentId(homeworkSubmissionId: string, studentId: string): Promise<Grades> {
+    return this.prisma.grades.findFirst({
+      where: {
+        homeworkSubmissionId,
+        studentId,
+      },
     });
   }
 

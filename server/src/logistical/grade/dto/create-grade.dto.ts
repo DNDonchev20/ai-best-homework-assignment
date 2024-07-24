@@ -1,7 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateGradeDto {
-    @ApiProperty({example: 'MATH', description: 'Subject ID'})
+    @ApiProperty({example: 'clytw4z7f0007kdvm44rnk2ic', description: 'Subject ID'})
+    teacherId: string;
+
+    @ApiProperty({example: 'clytw4z7f0007kdvm44rnk2ic', description: 'Student ID'})
     studentId: string;
 
     @ApiProperty({example: 'GRP1', description: 'Group ID'})
@@ -16,6 +19,6 @@ export class CreateGradeDto {
     @ApiProperty({example: 'Good Job', description: 'Feedback of the grade'})
     feedback: string;
 
-    students?: any;
+    teachers?: any;
     homeworkSubmissions?: any;
 }

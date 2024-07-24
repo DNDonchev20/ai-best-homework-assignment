@@ -1,5 +1,6 @@
 export interface Group {
-    name: string,
-    code?: string,
-    year: number,
+  id: string;
+  name: string;
+  code?: string;
+  year: number;
 }
