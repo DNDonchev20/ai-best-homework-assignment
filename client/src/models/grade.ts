@@ -1,8 +1,8 @@
 export interface Grade {
-    id: string,
-    studentId: string,
-    homeworkSubmissionId: string,
-    grade: number,
-    percentage: number,
-    feedback: string
+    id: string;
+    teacherId: string;
+    homeworkSubmissionId: string;
+    grade: number;
+    percentage: number;
+    feedback: string;
 }

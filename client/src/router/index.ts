@@ -8,6 +8,7 @@ import TeacherCreateHomework from "../views/TeacherCreateHomework.vue";
 import ShowHomeworkView from "../views/ShowHomeworkView.vue";
 import HomeworkView from "../views/HomeworkView.vue";
 import SubmitHomeworkView from "../views/SubmitHomeworkView.vue";
+import GradeHomeworkView from "../views/GradeHomeworkView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import StudentHomeworkView from "../views/StudentHomeworkView.vue";
 
@@ -84,6 +85,14 @@ const router = createRouter({
       component: SubmitHomeworkView,
       meta: {
         title: "Submit Homework",
+      },
+    },
+    {
+      path: "/gradeHomework",
+      name: "Grade Homework",
+      component: GradeHomeworkView,
+      meta: {
+        title: "Grade Homework",
       },
     },
     {

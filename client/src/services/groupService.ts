@@ -28,4 +28,12 @@ export class GroupService {
       throw new Error("Failed to get group");
     }
   }
+
+  public async deletGroupById(groupId: string): Promise<void> {
+    try {
+      await apiClient.delete(`/group/${groupId}`);
+    } catch (error) {
+      throw new Error("Failed to delete group");
+    }
+  }
 }

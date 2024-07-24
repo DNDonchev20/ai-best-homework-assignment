@@ -29,16 +29,7 @@ export class GradeController {
   async findOneGradeById(@Param('id') id: string) {
     return this.gradeService.findOneGradeById(id);
   }
-
-  @Get('student/:studentId')
-  @ApiOperation({summary: 'Get grade by student id'})
-  @ApiResponse({status: 200, description: 'Return grade by student id.'})
-  @ApiResponse({status: 403, description: 'Forbidden.'})
-
-  async findGradeByStudentId(@Param('studentId') studentId: string) {
-    return this.gradeService.findGradeByStudentId(studentId);
-  }
-
+  
   @Get('homeworkSubmission/:homeworkSubmissionId')
   @ApiOperation({summary: 'Get grade by homework submission id'})
   @ApiResponse({status: 200, description: 'Return grade by homework submission id.'})
@@ -46,6 +37,15 @@ export class GradeController {
 
   async findGradeByHomeworkSubmissionId(@Param('homeworkSubmissionId') homeworkSubmissionId: string) {
     return this.gradeService.findGradeByHomeworkSubmissionId(homeworkSubmissionId);
+  }
+
+  @Get('homeworkSubmission/:homeworkSubmissionId/student/:studentId')
+  @ApiOperation({summary: 'Get grade by homework submission id and student id'})
+  @ApiResponse({status: 200, description: 'Return grade by homework submission id and student id.'})
+  @ApiResponse({status: 403, description: 'Forbidden.'})
+  
+  async findGradeByHomeworkSubmissionIdAndStudentId(@Param('homeworkSubmissionId') homeworkSubmissionId: string, @Param('studentId') studentId: string) {
+    return this.gradeService.findGradeByHomeworkSubmissionIdAndStudentId(homeworkSubmissionId, studentId);
   }
 
   @Post()

@@ -93,8 +93,6 @@ model StudentDetails {
   updatedAt DateTime @updatedAt
 
   users      Users?    @relation(fields: [userId], references: [id])
-
-  Grades Grades[]
 }
 
 model Homeworks {
@@ -139,6 +137,7 @@ model HomeworkSubmissions {
 model Grades {
   id        String   @id @default(cuid())
 
+  teacherId String
   studentId String
   homeworkSubmissionId String @unique
 
@@ -149,6 +148,5 @@ model Grades {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  students   StudentDetails? @relation(fields: [studentId], references: [id])
   homeworkSubmissions HomeworkSubmissions? @relation(fields: [homeworkSubmissionId], references: [id])
 }
