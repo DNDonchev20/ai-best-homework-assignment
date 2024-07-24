@@ -25,6 +25,14 @@ export class HomeworkService {
     });
   }
 
+  async findHomeworksByGroupId(groupId: string): Promise<Homeworks[]> {
+    return this.prisma.homeworks.findMany({
+      where: {
+        groupId,
+      },
+    });
+  }
+
   async create(data: Prisma.HomeworksCreateInput): Promise<Homeworks> {
     return this.prisma.homeworks.create({
       data,
