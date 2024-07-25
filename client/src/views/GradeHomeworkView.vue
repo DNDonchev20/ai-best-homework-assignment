@@ -6,10 +6,11 @@ import { HomeworkSubmissionService } from "../services/homeworkSubmissionService
 import { GradeService } from "../services/gradeService";
 import { UserService } from "../services/userServices";
 
-const userId = "clytwbh5d0000jvqnbuplclvz";
-const homeworkId = "clyx9o0m60003mlvqdnyg4755";
-
 const route = useRoute();
+
+const userId = route.params.userId as string;
+const homeworkId = route.params.homeworkId as string;
+
 const homework = ref<any>(null);
 const selectedSubmission = ref<any>(null);
 const gradeData = ref({

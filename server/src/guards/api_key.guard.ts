@@ -9,6 +9,7 @@ export class ApiKeyGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     
     const isApiKeyRequiredFlag = isKeyRequired == 'true';
+    console.log('isApiKeyRequiredFlag', isApiKeyRequiredFlag);
 
     if (!isApiKeyRequiredFlag) {
       const receivedApiKey = request.headers['api-key'];

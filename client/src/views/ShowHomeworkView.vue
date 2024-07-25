@@ -25,28 +25,28 @@ const fetchHomeworks = async () => {
     const teacher = await teacherService.findTeacherByUserId(userId);
     const teacherId = teacher.id;
 
-    const allHomeworks =
-      await homeworkService.getHomeworksByTeacherId(teacherId);
+    const allHomeworks = await homeworkService.getHomeworksByTeacherId(teacherId);
 
     for (const homework of allHomeworks) {
       await delay(500);
+      console.log(homework.id);
       const submissions =
         await homeworkSubmissionService.findHomeworkSubmissionsByHomeworkId(
           homework.id,
         );
+
+        console.log(submissions);
 
       const ungradedSubmissions = submissions.filter(
         (submission) => !submission.isGraded,
       );
 
       for (const submission of ungradedSubmissions) {
-        const studentUserId = await studentDetailsService.findUserIdByStudentId(
-          submission.studentId,
-        );
         await delay(500);
-        const student = await userService.getOtherUserByUserId(studentUserId);
+        const student = await userService.getOtherUserByUserId(submission.studentId);
+        console.log(student.id);
         homeworks.value.push({
-          userId: studentUserId,
+          userId: student.id,
           id: homework.id,
           title: homework.title,
           description: homework.description,

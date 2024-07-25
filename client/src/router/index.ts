@@ -10,7 +10,6 @@ import SubmitHomeworkView from "../views/SubmitHomeworkView.vue";
 import GradeHomeworkView from "../views/GradeHomeworkView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import StudentHomeworkView from "../views/StudentHomeworkView.vue";
-import { ifLogged } from "../services/authenticationRouter";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,7 +70,6 @@ const router = createRouter({
         title: "Show Homework",
       },
     },
-
     {
       path: "/submitHomework/:homeworkId",
       name: "SubmitHomework",
