@@ -8,6 +8,8 @@ import { RolesGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.Admin)
 @ApiTags('subject')
 @Controller('subject')
 export class SubjectController {
@@ -19,6 +21,8 @@ export class SubjectController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+
   async findAllSubjects() {
     return this.subjectsService.findAllSubjects();
   }
@@ -28,6 +32,8 @@ export class SubjectController {
   @ApiResponse({status: 200, description: 'Return subject by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
 
   async findOneSubjectById(@Param('id') id: string) {
     return this.subjectsService.findOneSubjectById(id);
@@ -39,6 +45,8 @@ export class SubjectController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+
   async createSubject(@Body() createSubjectDto: CreateSubjectDto) {
     return this.subjectsService.createSubject(createSubjectDto);
   }
@@ -47,6 +55,8 @@ export class SubjectController {
   @ApiOperation({summary: 'Update subject by id'})
   @ApiResponse({status: 200, description: 'Update subject by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
+
+  @ApiBearerAuth()
 
   async updateSubject(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
     return this.subjectsService.updateSubject(id, updateSubjectDto);
@@ -57,6 +67,8 @@ export class SubjectController {
   @ApiResponse({status: 200, description: 'Delete subject by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
 
   async deleteSubject(@Param('id') id: string) {
     return this.subjectsService.removeSubject(id);

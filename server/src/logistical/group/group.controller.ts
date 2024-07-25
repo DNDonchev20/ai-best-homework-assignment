@@ -8,6 +8,8 @@ import { RolesGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.Admin)
 @ApiTags('group')
 @Controller('group')
 export class GroupsController {
@@ -19,6 +21,8 @@ export class GroupsController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+
   async findAllGroups() {
     return this.groupsService.findAllGroups();
   }
@@ -28,6 +32,8 @@ export class GroupsController {
   @ApiResponse({status: 200, description: 'Return group by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
 
   async findOneGroupById(@Param('id') id: string) {
     return this.groupsService.findOneGroupById(id);
@@ -39,6 +45,8 @@ export class GroupsController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+
   async createGroup(@Body() createGroupDto: CreateGroupDto) {
     return this.groupsService.createGroup(createGroupDto);
   }
@@ -47,6 +55,8 @@ export class GroupsController {
   @ApiOperation({summary: 'Update group by id'})
   @ApiResponse({status: 200, description: 'Update group by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
+
+  @ApiBearerAuth()
 
   async updateGroup(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
     return this.groupsService.updateGroup(id, updateGroupDto);  
@@ -57,6 +67,8 @@ export class GroupsController {
   @ApiResponse({status: 200, description: 'Delete group by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
 
   async deleteGroup(@Param('id') id: string) {
     return this.groupsService.removeGroup(id);

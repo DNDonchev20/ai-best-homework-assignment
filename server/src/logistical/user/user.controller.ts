@@ -11,16 +11,20 @@ import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Public } from 'src/decorators/is_public.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  
   @Get()
   @ApiOperation({summary: 'Get all users'})
   @ApiResponse({status: 200, description: 'Return all users.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
 
   async findAllUsers(): Promise<Users[]> {
     return this.userService.findAll();
@@ -32,6 +36,9 @@ export class UserController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Teacher, Role.Admin)
+
   async findUserById(@Param('id') id: string): Promise<Users> {
     return this.userService.findUserById(id);
   }
@@ -42,6 +49,9 @@ export class UserController {
   @ApiResponse({status: 200, description: 'Return user id by email.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Teacher, Role.Admin)
 
   async findIdByEmail(@Param('email') email: string): Promise<string> {
     return this.userService.findIdByEmail(email);
@@ -65,6 +75,9 @@ export class UserController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<Users> {
     return this.userService.updateUser(id, updateUserDto);
   }
@@ -74,6 +87,9 @@ export class UserController {
   @ApiResponse({status: 200, description: 'Delete user by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
 
   async deleteUser(@Param('id') id: string): Promise<Users> {
     return this.userService.removeUser(id);

@@ -8,6 +8,7 @@ import { Roles } from 'src/decorators/role.decorator';
 import { RolesGuard } from 'src/guards/role.guard';
 import { Role } from 'src/enums/role.enum';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('teacher')
 @Controller('teacher')
 export class TeacherController {
@@ -19,6 +20,9 @@ export class TeacherController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+
   async findAllTeachers() {
     return this.teacherService.findAllTeachers();
   }
@@ -28,6 +32,9 @@ export class TeacherController {
   @ApiResponse({status: 200, description: 'Return teacher by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
 
   async findOneTeacherById(@Param('id') id: string) {
     return this.teacherService.findOneTeacherById(id);
@@ -39,6 +46,9 @@ export class TeacherController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
+
   async findTeacherByUserId(@Param('userId') userId: string) {
     return this.teacherService.findTeacherByUserId(userId);
   }
@@ -48,6 +58,9 @@ export class TeacherController {
   @ApiResponse({status: 200, description: 'Return teachers by subject id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
 
   async findTeachersBySubjectId(@Param('subjectId') subjectId: string) {
     return this.teacherService.findTeachersBySubjectId(subjectId);
@@ -59,6 +72,9 @@ export class TeacherController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
+
   async findGroupIdsByUserId(@Param('userId') userId: string) {
     return this.teacherService.findGroupIdsById(userId);
   }
@@ -69,6 +85,9 @@ export class TeacherController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+
   async createTeacher(@Body() createTeacherDto: CreateTeacherDto) {
     return this.teacherService.createTeacher(createTeacherDto);
   }
@@ -77,6 +96,9 @@ export class TeacherController {
   @ApiOperation({summary: 'Update teacher by id'})
   @ApiResponse({status: 200, description: 'Update teacher by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
 
   async updateTeacher(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
     return this.teacherService.updateTeacher(id, updateTeacherDto);
@@ -87,6 +109,9 @@ export class TeacherController {
   @ApiResponse({status: 200, description: 'Delete teacher by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
   
   async deleteTeacher(@Param('id') id: string) {
     return this.teacherService.removeTeacher(id);

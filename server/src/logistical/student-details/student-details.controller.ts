@@ -9,6 +9,7 @@ import { RolesGuard } from 'src/guards/role.guard';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('student-details')
 @Controller('student-details')
 export class StudentDetailsController {
@@ -20,6 +21,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+
   async findAllStudentDetails() {
     return this.studentDetailsService.findAllStudentDetails();
   }
@@ -29,6 +33,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 200, description: 'Return student detail by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
 
   async findOneStudentDetailById(@Param('id') id: string) {
     return this.studentDetailsService.findOneStudentDetailById(id);
@@ -40,6 +47,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async findStudentDetailByUserId(@Param('userId') userId: string) {
     return this.studentDetailsService.findStudentDetailByUserId(userId);
   }
@@ -49,6 +59,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 200, description: 'Return student detail by group id and user id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
 
   async findStudentDetailByGroupIdAndUserId(@Param('userId') userId: string) {
     return this.studentDetailsService.findGroupIdsById(userId);
@@ -60,6 +73,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async findStudentByGroupId(@Param('groupId') groupId: string) {
     return this.studentDetailsService.findStudentByGroupId(groupId);
   }
@@ -70,6 +86,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async findUserIdById(@Param('id') id: string) {
     return this.studentDetailsService.findUserIdById(id);
   }
@@ -79,6 +98,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 200, description: 'Create student detail.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
   
   async createStudentDetail(@Body() createStudentDetailDto: CreateStudentDetailDto) {
     return this.studentDetailsService.createStudentDetail(createStudentDetailDto);
@@ -90,6 +112,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+
   async updateStudentDetail(@Param('id') id: string, @Body() updateStudentDetailDto: UpdateStudentDetailDto) {
     return this.studentDetailsService.updateStudentDetail(id, updateStudentDetailDto);
   }
@@ -99,6 +124,9 @@ export class StudentDetailsController {
   @ApiResponse({status: 200, description: 'Delete student detail by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
 
   async removeStudentDetail(@Param('id') id: string) {
     return this.studentDetailsService.removeStudentDetail(id);

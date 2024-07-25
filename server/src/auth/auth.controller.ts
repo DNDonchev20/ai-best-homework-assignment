@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus, Request, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, HttpCode, HttpStatus, Request, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/is_public.decorator';
 import { AuthGuard } from '@nestjs/passport';
 
-import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/guards/jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -64,7 +66,6 @@ export class AuthController {
     return this.authService.refreshTokens(refreshDto.refreshToken);
   }
 
-  //must have auth guard
   @Get('profile')
   @ApiOperation({ summary: 'Get user profile' })
   @Get('profile')
@@ -77,6 +78,9 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized.',
   })
+
+  @ApiBearerAuth()
+
   async getProfile(@Request() req) {
     return req.user;
   }

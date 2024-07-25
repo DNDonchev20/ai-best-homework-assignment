@@ -1,18 +1,19 @@
 import axios from "axios";
-
-const apiUrl = "https://homeworks-server.azurewebsites.net";
+import { ApiKey, ApiUrl } from "./constants";
 
 export const apiClient = axios.create({
-  baseURL: apiUrl,
+  baseURL: ApiUrl,
   headers: {
     "Content-Type": "application/json",
+    "api-key": ApiKey,
   },
 });
 
 export const refreshTokenClient = axios.create({
-  baseURL: apiUrl,
+  baseURL: ApiUrl,
   headers: {
     "Content-Type": "application/json",
+    "api-key": ApiKey,
   },
 });
 

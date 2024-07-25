@@ -1,12 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, UseGuards } from '@nestjs/common';
 import { HomeworkSubmissionService } from './homework-submission.service';
 import { CreateHomeworkSubmissionDto } from './dto/create-homework-submission.dto';
 import { UpdateHomeworkSubmissionDto } from './dto/update-homework-submission.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HomeworkSubmissions } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SkipThrottle } from '@nestjs/throttler';
+import { JwtAuthGuard } from 'src/guards/jwt.guard';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @SkipThrottle()
 @ApiTags('homework-submission')
 @Controller('homework-submission')
@@ -18,6 +23,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Return all homework submissions.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+  
   async findAllHomeworkSubmissions(): Promise<HomeworkSubmissions[]> {
     return this.homeworkSubmissionService.findlAllHomeworkSubmissions();
   }
@@ -27,6 +36,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Return homework submission by id.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+
   async findHomeworkSubmissionById(@Param('id') id: string): Promise<HomeworkSubmissions> {
     return this.homeworkSubmissionService.findHomeworkSubmissionById(id);
   }
@@ -36,6 +49,9 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Return submission details by user id and homework id.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
 
   async getSubmissionDetailsByUserIdAndHomeworkId(@Param('userId') userId: string, @Param('homeworkId') homeworkId: string): Promise<HomeworkSubmissions> {
     return this.homeworkSubmissionService.getSubmissionDetailsByUserIdAndHomeworkId(userId, homeworkId);
@@ -47,6 +63,9 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
 
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async checkSubmissionExists(@Param('userId') userId: string, @Param('homeworkId') homeworkId: string): Promise<boolean> {
     return this.homeworkSubmissionService.checkSubmissionExists(userId, homeworkId);
   }
@@ -56,6 +75,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Return homework submission by student id.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async findHomeworkSubmissionByUserId(@Param('studentId') studentId: string): Promise<HomeworkSubmissions[]> {
     return this.homeworkSubmissionService.findHomeworkSubmissionByUserId(studentId);
   }
@@ -65,6 +88,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Return homework submission by homework id.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async findHomeworkSubmissionByHomeworkId(@Param('homeworkId') homeworkId: string): Promise<HomeworkSubmissions[]> {
     return this.homeworkSubmissionService.findHomeworkSubmissionByHomeworkId(homeworkId);
   }
@@ -74,6 +101,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Create homework submission metadata.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async createHomeworkSubmissionMetadata(
     @Body() createHomeworkSubmissionDto: CreateHomeworkSubmissionDto
   ): Promise<HomeworkSubmissions> {
@@ -82,6 +113,10 @@ export class HomeworkSubmissionController {
 
   @Post('file')
   @UseInterceptors(FileInterceptor('file'))
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async uploadHomeworkSubmissionFile(
       @UploadedFile(new ParseFilePipe({
           validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 })],
@@ -97,6 +132,9 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
 
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async createHomeworkSubmissionFilePath(@Body() data: CreateHomeworkSubmissionDto): Promise<HomeworkSubmissions> {
     return this.homeworkSubmissionService.createHomeworkSubmissionFilePath(data);
   }
@@ -106,6 +144,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Update homework submission by id.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async updateHomeworkSubmission(@Param('id') id: string, @Body() updateHomeworkSubmissionDto: UpdateHomeworkSubmissionDto): Promise<HomeworkSubmissions> {
     return this.homeworkSubmissionService.updateHomeworkSubmission(id, updateHomeworkSubmissionDto);
   }
@@ -115,6 +157,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Delete homework submission by id.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async removeHomeworkSubmission(@Param('id') id: string): Promise<HomeworkSubmissions> {
     return this.homeworkSubmissionService.removeHomeworkSubmission(id);
   }
@@ -124,6 +170,10 @@ export class HomeworkSubmissionController {
   @ApiResponse({ status: 200, description: 'Return file URL for the homework submission.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
+
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+  
   async getFileForHomeworkSubmission(@Param('id') id: string): Promise<{ fileUrl: string }> {
     const submission = await this.homeworkSubmissionService.findHomeworkSubmissionById(id);
     return { fileUrl: submission.filePath };

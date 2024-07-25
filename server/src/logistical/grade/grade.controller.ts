@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { GradeService } from './grade.service';
 import { CreateGradeDto } from './dto/create-grade.dto';
 import { UpdateGradeDto } from './dto/update-grade.dto';
 
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/guards/jwt.guard';
+import { RolesGuard } from 'src/guards/role.guard';
+import { Roles } from 'src/decorators/role.decorator';
+import { Role } from 'src/enums/role.enum';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('grade')
 @Controller('grade')
 export class GradeController {
@@ -16,6 +21,9 @@ export class GradeController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
+
   async findAllGrades() {
     return this.gradeService.findAllGrades();
   }
@@ -26,6 +34,9 @@ export class GradeController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
+
   async findOneGradeById(@Param('id') id: string) {
     return this.gradeService.findOneGradeById(id);
   }
@@ -35,6 +46,9 @@ export class GradeController {
   @ApiResponse({status: 200, description: 'Return grade by homework submission id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.User, Role.Admin)
+
   async findGradeByHomeworkSubmissionId(@Param('homeworkSubmissionId') homeworkSubmissionId: string) {
     return this.gradeService.findGradeByHomeworkSubmissionId(homeworkSubmissionId);
   }
@@ -43,6 +57,9 @@ export class GradeController {
   @ApiOperation({summary: 'Get grade by homework submission id and student id'})
   @ApiResponse({status: 200, description: 'Return grade by homework submission id and student id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
   
   async findGradeByHomeworkSubmissionIdAndStudentId(@Param('homeworkSubmissionId') homeworkSubmissionId: string, @Param('studentId') studentId: string) {
     return this.gradeService.findGradeByHomeworkSubmissionIdAndStudentId(homeworkSubmissionId, studentId);
@@ -54,6 +71,9 @@ export class GradeController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
+
   async createGrade(@Body() createGradeDto: CreateGradeDto) {
     return this.gradeService.createGrade(createGradeDto);
   }
@@ -63,6 +83,9 @@ export class GradeController {
   @ApiResponse({status: 200, description: 'Update grade by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Admin)
 
   async updateGrade(@Param('id') id: string, @Body() updateGradeDto: UpdateGradeDto) {
     return this.gradeService.updateGrade(id, updateGradeDto);
@@ -74,6 +97,9 @@ export class GradeController {
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
 
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
+
   async updateGradeByHomeworkSubmissionId(@Param('homeworkSubmissionId') homeworkSubmissionId: string, @Body() updateGradeDto: UpdateGradeDto) {
     return this.gradeService.updateGradeByHomeworkSubmissionId(homeworkSubmissionId, updateGradeDto);
   }
@@ -83,6 +109,9 @@ export class GradeController {
   @ApiResponse({status: 200, description: 'Delete grade by id.'})
   @ApiResponse({status: 403, description: 'Forbidden.'})
   @ApiResponse({status: 404, description: 'Not found.'})
+
+  @ApiBearerAuth()
+  @Roles(Role.Teacher, Role.Admin)
 
   async deleteGrade(@Param('id') id: string) {
     return this.gradeService.removeGrade(id);
