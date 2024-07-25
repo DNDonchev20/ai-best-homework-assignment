@@ -39,7 +39,7 @@ import { ref } from "vue";
     <img
       src="../assets/images/heroImage.png"
       alt="image of our app"
-      class="h-auto min-w-[700px] pr-20 pt-40 2xl:min-w-[800px] 2xl:pt-52"
+      class="h-auto min-w-[700px] pr-20 2xl:min-w-[800px] 2xl:pt-24"
     />
   </div>
   <div class="mt-48 bg-secondary pb-20 pt-20" id="features">
@@ -63,12 +63,12 @@ import { ref } from "vue";
   </div>
   <div class="flex flex-row justify-center gap-40 pt-48" id="roles">
     <img
-      src="../assets/images/heroImage.png"
+      src="../assets/images/rolesImage1.png"
       alt="image of our app"
       class="h-auto max-w-[600px]"
     />
     <div class="flex max-w-[500px] flex-col pt-16">
-      <h2 class="text-5xl font-semibold">Lorem, ipsum dolor.</h2>
+      <h2 class="text-5xl font-semibold">Student role</h2>
       <p class="pt-10 text-lg">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus
         laudantium quia incidunt ad et quo recusandae ipsum quidem corporis
@@ -79,12 +79,12 @@ import { ref } from "vue";
   </div>
   <div class="flex flex-row-reverse justify-center gap-40 pt-48">
     <img
-      src="../assets/images/heroImage.png"
+      src="../assets/images/rolesImage2.png"
       alt="image of our app"
       class="h-auto max-w-[600px]"
     />
     <div class="flex max-w-[500px] flex-col pt-16">
-      <h2 class="text-5xl font-semibold">Lorem, ipsum dolor.</h2>
+      <h2 class="text-5xl font-semibold">Teacher role</h2>
       <p class="pt-10 text-lg">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus
         laudantium quia incidunt ad et quo recusandae ipsum quidem corporis

@@ -1,4 +1,4 @@
-import {apiKey, apiUrl} from './env';
+import { apiKey, apiUrl } from "./env";
 
-export const ApiKey = apiKey;
-export const ApiUrl = apiUrl;
+export const ApiKey = "si1rx2Ax8J1IoN2sTcnyRaeZAfXcIM6w";
+export const ApiUrl = "https://homeworks-server.azurewebsites.net/";
